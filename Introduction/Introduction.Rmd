@@ -1,0 +1,51 @@
+---
+title: "Introduction"
+author: "Claire Liow"
+output: 
+  beamer_presentation:
+    theme: "Boadilla"
+    colortheme: "beaver"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+#tinytex::reinstall_tinytex()
+
+#install.packages("devtools")
+library(devtools)
+library(qss)
+library(tidyverse)
+
+setwd("~/Dropbox/GitHub/qss-inst-tidyverse/Introduction")
+UNpop <- read_csv("data/UNpop.csv")
+```
+
+## A brief introduction to R and Tidyverse
+
+ - What is Tidyverse?
+ - Tidyverse vs base R
+ - Good coding practices
+
+## Subsetting 
+
+Base R: Lots of brackets! [[ ]]\
+Tidyverse: `slice()` `select()`\
+
+Example 1: Subsetting the first three rows\
+`UNpop[c(1, 2, 3),]` `slice(UNpop, n = 1:3)`
+
+Example 2: Subsetting the first three rows of the year variable\
+`UNpop[1:3, "year"]` `select(slice(UNpop, 1:3), year)`\
+
+Example 3: Pipe operator %>%\
+`UNpop %>%`
+    `slice(1:3) %>%`
+    `select(year)`
+
+## Adding variables 
+
+
+
+## Summarizing 
+
+
