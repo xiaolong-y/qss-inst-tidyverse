@@ -1,0 +1,236 @@
+---
+title: "A Probability Model for Betting Market Election Prediction"
+output: html_document
+---
+
+This exercise is based on Rothschild, D. 2009. “[Forecasting Elections: Comparing Prediction Markets, Polls, and Their Biases.](http://dx.doi.org/10.1093/poq/nfp082)” *Public Opinion Quarterly* 73(5): 895–916.
+
+Earlier in this chapter, we used pre-election polls with a probability model to predict Obama's electoral vote share in the 2008 US election. In this exercise, we will apply a similar procedure to the Intrade betting market data analyzed in an exercise in Chapter 4 (see Section 4.5).
+
+The 2008 Intrade data is available as *intrade08.csv*. The variable names and descriptions of this data set are available in Table 4.9. Recall that each row of the data set represents daily trading information about the contracts for either the Democratic or Republican Party nominee's victory in a particular state. The 2008 election results data are available as *pres08.csv*, whose variable names and descriptions appear in Table 4.1.
+
+## Question 1
+
+We analyze the contract of the Democratic Party nominee winning a given state $j$. Recall from Section 4.5 that the data set contains the contract price of the market for each state on each day $i$ leading up to the election. We will interpret the `PriceD` as the probability $p_{ij}$ that the Democrat would win state $j$ if the election were held on day $i$. To treat `PriceD` as a probability, divide it by 100 so it ranges from 0 to 1. How accurate is this probability?  Using only the data from the day before Election Day (November 4, 2008) within each state, compute the expected number of electoral votes Obama is predicted to win and compare it with the actual number of electoral votes Obama won. Briefly interpret the result. Recall that the actual total number of electoral votes for Obama is 365, not 364, which is the sum of electoral votes for Obama based on the results data. The 365-total includes a single electoral vote that Obama garnered from Nebraska's 2nd Congressional District. McCain won Nebraska's four other electoral votes because he won the state overall.
+
+## Answer 1
+
+```{r}
+## Load prediction market data
+intrade08 <- read.csv("data/intrade08.csv")
+## Transform price to probability
+intrade08$PriceD.pr <- intrade08$PriceD / 100
+## Days to Election Variable
+intrade08$DaysToElection <- as.Date("2008-11-04") - 
+  as.Date(intrade08$day)
+## Load Results data
+pres08 <- read.csv("data/pres08.csv")
+## Calculate winner EV variable
+pres08$EV.ob.act <- ifelse(pres08$Obama > pres08$McCain,
+                           pres08$EV, 0)
+## Merge the data sets
+intrade08 <- merge(intrade08, pres08, by = "state")
+## Subset day before election
+int08rec <- intrade08[intrade08$DaysToElection == 1, ]
+## Calculate expected votes
+int08rec$EV.ob.pred <- int08rec$PriceD.pr * int08rec$EV
+## Calculate expected total electoral votes vs. actual
+sum(int08rec$EV.ob.act) + 1 # Add one for NE vote
+sum(int08rec$EV.ob.pred) 
+```
+
+The expected number of Obama's electoral votes equals the sum of the total number of electoral votes in each state multiplied by the corresponding probability of Obama's victory. Obama was expected to garner `r round(sum(int08rec$EV.ob.pred), 1)` votes, which was his actual
+total.
+
+## Question 2
+
+Next, using the same set of probabilities used in the previous
+  question, simulate the total number of electoral votes Obama is
+  predicted to win.  Assume that the election in each state is a
+  Bernoulli trial where the probability of success (Obama winning) is
+  $p_{ij}$. Display the results using a histogram.  Add the actual
+  number of electoral votes Obama won as a solid line.  Briefly
+  interpret the result.
+  
+## Answer 2
+
+```{r}  
+par(cex = 1.5)
+## Setup simulations and rbinom parameters
+sims <- 5000
+## States and pijs 
+n.states <- length(int08rec$state)
+pijs <- int08rec$PriceD.pr
+## Electoral votes for states
+EVs.pr <- int08rec$EV
+## Empty container for simulation results
+Obama.ev <- rep(NA, sims)
+## Simulation
+for(i in 1:sims){
+  ## Bernoulli simulation
+  result <- rbinom(n.states, size = 1, pijs)
+  ## Add simulated EVs 
+  Obama.ev[i] <- sum(EVs.pr[result == 1]) 
+}
+## Histogram
+hist(Obama.ev, freq = FALSE, xlim = c(250, 450), 
+     ylim = c(0, 0.03), xlab = "Electoral Votes", 
+     main = "Obama's Predicted Electoral Votes")
+abline(v = 365, col = "red")
+text(375, .02, "Actual Vote Total: 365")
+```
+
+The histogram reveals that the simulation underestimates the number of
+electoral votes Obama won.
+
+## Question 3
+
+In prediction markets, people tend to exaggerate the likelihood
+  that the trailing or "long shot"" candidate will win. This means
+  that candidates with a low (high) $p_{ij}$ have a true probability
+  that is lower (higher) than their predicted $p_{ij}$. Such a
+  discrepancy could introduce bias into our predictions, so we want to
+  adjust our probabilities to account for it.  We do so by reducing
+  the probability for candidates who have a less than 0.5 chance of
+  winning, and increasing the probability for those with a greater
+  than 0.5 chance. We will calculate a new probability $p_{ij}^\ast$
+  using the following formula proposed by a researcher:
+  $p^\ast_{ij} = \Phi(1.64 \times \Phi^{-1}(p_{ij}))$ where
+  $\Phi(\cdot)$ is the CDF of the standard Normal random variable and
+  $\Phi^{-1}(\cdot)$ is its inverse, the quantile function.  The `R`
+  functions `pnorm` and `qnorm` can be used to compute
+  $\Phi(\cdot)$ and $\Phi^{-1}(\cdot)$, respectively.  Plot $p_{ij}$,
+  used in the previous questions, against $p_{ij}^\ast$.  In addition,
+  plot this function itself as a line.  Explain the nature of the
+  transformation.
+  
+## Answer 3
+
+```{r}
+par(cex = 1.5)
+## Adjust for bias
+x <- seq(from = 0.01, to = 0.99, by = 0.01)
+int08rec$PriceD.debpr <- pnorm(1.64*qnorm(int08rec$PriceD.pr))
+plot(pijs, int08rec$PriceD.debpr, ylim = c(0, 1), 
+     ylab = "Adjusted Probabilities", 
+     xlab = "Initial Probabilities")
+lines(x, pnorm(1.64*qnorm(x)))
+abline(0, 1)
+```
+
+For states with initial $p_{ij}$'s below 0.5, the transformation
+decreases the probability.  The transformation does the reverse for
+states with probabilities initially above 0.5. This makes the
+probabilities more extreme (smaller or larger) when a state has a long
+shot candidate.
+
+## Question 4
+
+Using the new probabilities $p_{ij}^\ast$, repeat
+  Questions 1 and 2.  Do the new probabilities improve predictive
+  performance?
+
+## Answer 4
+
+```{r}  
+par(cex = 1.5)
+## Calculate expected votes
+int08rec$EV.ob.pred.deb <- int08rec$PriceD.debpr * int08rec$EV
+sum(int08rec$EV.ob.pred.deb) 
+## Setup simulations and rbinom parameters
+sims <- 5000
+n.states <- length(int08rec$state)
+pijs.ast <- int08rec$PriceD.debpr
+## Empty container for simulation results
+Obama.ev.deb <- rep(NA, sims)
+for(i in 1:sims){
+  result <- rbinom(n.states, size = 1, pijs.ast)
+  Obama.ev.deb[i] <- sum(EVs.pr[result == 1]) 
+}
+## Histogram
+hist(Obama.ev.deb, freq = FALSE, xlim = c(250, 450), ylim = c(0, 0.03),
+     xlab = "Obama's electoral votes")
+abline(v = 365, col = "red")
+text(375, .027, "Actual Total: 365", cex = .8)
+```
+
+Overall, the transformation improves predictive performance. The
+expected vote total is closer to the actual vote total.  In addition,
+the histogram reveals that the distribution of simulated electoral
+vote totals is centered closer to and more tightly around the actual
+result than in the previous plot.
+
+## Question 5
+
+Compute the expected number of Obama's electoral votes using the
+  new probabilities $p_{ij}^\ast$ for each of the last 120 days of the
+  campaign.  Display the result as a time series plot. Briefly
+  interpret the plot.
+  
+## Answer 5
+  
+```{r}
+## Create biased adjusted probabilities for all 120 days
+intrade08$PriceD.debpr <- pnorm(1.64*qnorm(intrade08$PriceD.pr))
+## Subset data for 120 days
+intrade08.120 <- intrade08[intrade08$DaysToElection <= 120 &
+                             intrade08$DaysToElection >= 1,]
+## Calculate expected vote total
+intrade08.120$Ob.EVs <- intrade08.120$PriceD.debpr * intrade08.120$EV
+## Sum electoral votes by day
+Ob.votes.byday <- tapply(intrade08.120$Ob.EVs, 
+                         intrade08.120$DaysToElection, sum)
+## Create plot
+plot(Ob.votes.byday, xlim = c(120, 1), ylim = c(150, 400),
+     xlab = "Days to Election", 
+     ylab = "Expected Number of Electoral Votes")
+abline(h = 365)
+```
+
+The plot reveals that the betting market predictions become more
+accurate (approach 365) as Election Day approaches.
+
+## Question 6
+
+For each of the last 120 days of the campaign, conduct a
+  simulation as done in Question 2 using the new probabilities
+  $p_{ij}^\ast$. Compute the quantiles of Obama's electoral votes at
+  2.5\% and 97.5\% for each day. Represent the range from 2.5\% to
+  97.5\% for each day as a vertical line, using a loop. Also, add the
+  estimated total number of Obama's electoral votes across
+  simulations.  Briefly interpret the result.
+  
+## Answer 6
+
+```{r}
+## Set up empty containers
+sims <- 5000
+n.states <- length(unique(intrade08.120$state))
+## Store electoral votes
+Obama.EV <- matrix(NA, nrow = sims, ncol = 120)
+for(t in 1:120){
+    daily <- intrade08.120[intrade08.120$DaysToElection == t,]
+    for(i in 1:sims){
+        results <- rbinom(n.states, size = 1, prob = daily$PriceD.debpr)
+        Obama.EV[i, t] <- sum(daily$EV[results == 1]) 
+    }
+}  
+Obama.mean <- apply(Obama.EV, 2, mean)
+Obama.025 <- apply(Obama.EV, 2, quantile, prob = .025)
+Obama.975 <- apply(Obama.EV, 2, quantile, prob = .975)
+## Create plot
+plot(Obama.mean, xlim = c(120, 1), ylim = c(150, 400),
+     xlab = "Days to Election", 
+     ylab = "Expected Number of Electoral Votes")
+for(i in 1:120) {
+    lines(c(i, i), c(Obama.025[i], Obama.975[i]))
+}
+abline(h = 365)
+```
+
+The expected total number of Obama's votes from Monte Carlo simulation
+is similar to the one obtained analytically in the previous question.
+The vertical lines shrink somewhat in size as Election Day approaches,
+which suggests that the prediction is becoming not only more accurate
+(based on the previous question), but also less noisy in reducing its
+variation, and therefore more precise.

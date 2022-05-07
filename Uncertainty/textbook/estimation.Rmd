@@ -1,0 +1,29 @@
+---
+title: "Probability and Conditional Probability"
+date: Summer 2022
+author: "Introduction to Quantitative Social Science"
+institute: "Xiaolong Yang \\ University of Tokyo"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "beaver"
+    toc: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+### Birthday Problem
+
+```{r}
+
+```
+
+### Solution via Monte Carlo Simulation
+
+```{r}
+
+```
+

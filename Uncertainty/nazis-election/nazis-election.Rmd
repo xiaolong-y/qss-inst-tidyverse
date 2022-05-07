@@ -1,0 +1,264 @@
+---
+title: "Analysis of the 1933 German Election during the Weimar Republic"
+output: html_document
+---
+
+ Who voted for the Nazis?  Researchers attempted to answer this
+question by analyzing aggregate election data from the 1933 German
+election during the Weimar Republic.
+
+This exercise is based on the following article: King, Gary, Ori Rosen, Martin Tanner, Alexander F. Wagner. 2008.  "[Ordinary Economic Voting Behavior in the Extraordinary Election of Adolf Hitler.](http://dx.doi.org/10.1017/S0022050708000788)" *Journal of Economic History* 68(4): 951-996.  
+
+We analyze a simplified version of the election outcome data, which records, for each precinct, the number of eligible voters as well as the number of votes for the Nazi
+party.  In addition, the data set contains the aggregate occupation
+statistics for each precinct. The table below presents the
+variable names and descriptions of the data file
+`nazis.csv`.  Each observation represents a German precinct.
+
+------------------------------------------------------------------------------
+ Name                Description
+ ------------------- ---------------------------------------------------------
+ `shareself`         Proportion of self-employed potential voters
+ 
+ `shareblue`         Proportion of blue-collar potential voters
+ 
+ `sharewhite`        Proportion of white-collar potential voters
+ 
+ `sharedomestic`     Proportion of domestically employed potential voters
+ 
+ `shareunemployed`   Proportion of unemployed potential voters
+ 
+ `nvoter`            Number of eligible voters
+ 
+ `nazivote`          Number of votes for Nazis
+------------------------------------------------------------------------------
+ 
+The goal of analysis is to investigate which types of voters (based on
+their occupation category) cast ballots for the Nazis.  One hypothesis
+says that the Nazis received much support from blue-collar workers.
+Since the data do not directly tell us how many blue-collar workers
+voted for the Nazis, we must infer this information using a
+statistical analysis with certain assumptions.  Such an analysis where
+researchers try to infer individual behaviors from aggregate data is
+called *ecological inference*.
+
+To think about ecological inference more carefully in this context,
+consider the following simplified table for each precinct $i$:
+ 
+ Vote-Choice                  Blue-Collar   Non-blue-collar   
+ ---------------------------- ------------- ----------------- -----------
+ Nazis                        $W_{i1}$      $W_{i2}$          $Y_i$     
+ Other parties or abstention  $1-W_{i1}$    $1-W_{i2}$        $1-Y_i$  
+                              $X_i$         $1-X_i$
+ ------------------------------------------------------------------------
+                              
+The data at hand only tells us the proportion of blue-collar voters
+$X_i$ and the vote share for the Nazis $Y_i$ in each precinct, but we
+would like to know the Nazi vote share among the blue-collar voters
+$W_{i1}$ and among the non-blue-collar voters $W_{i2}$.  Then, there
+is a deterministic relationship between $X$, $Y$, and $W_1, W_2$.
+Indeed, for each precinct $i$, we can express the overall Nazis' vote
+share as the weighted average of the Nazis' vote share of each
+occupation,
+
+$$
+  Y_i = X_i W_{i1} + (1-X_i) W_{i2}
+$$
+
+## Question 1
+
+We exploit the linear relationship between the Nazis' vote share
+  $Y_i$ and the proportion of blue-collar voters $X_i$ given in
+  the equation above by regressing the former on
+  the latter.  That is, fit the following linear regression model,
+  
+  $$
+    E(Y_i | X_i) = \alpha + \beta X_i
+  $$
+  Compute the estimated slope coefficient, its standard error, and the
+  95% confidence interval.  Give a substantive interpretation of each
+  quantity.
+  
+## Answer 1
+
+```{r}
+nazis <- read.csv("data/nazis.csv")
+nazis$sharenazis <- nazis$nazivote / nazis$nvoter # Y_i as vote share
+simplefit <- lm(sharenazis ~ shareblue, data = nazis)
+summary(simplefit)
+confint(simplefit)
+```
+
+The simple regression indicates that as the percentage of blue-collar
+voters increases, so too does the Nazi vote share. However, the
+standard error is about 0.05, which is fairly large.
+
+A better understanding of this slope coefficient requires the readers
+to directly connect the two equations above.
+To do this, take the conditional expectation of the former given
+$X_i$:
+
+$$
+  E(Y_i | X_i) = E(W_{i1} | X_i) X_i + E(W_{i2} | X_i) (1-X_i) \\
+  = \underbrace{E(W_{i2} | X_i)}_{= \ \ \ \alpha} + \underbrace{E(W_{i1} - W_{i2} | X_i)}_{= \ \ \ \beta} X_i
+$$
+
+Thus, the model assumes that the Nazi expected vote share among
+blue-collar voters (as well as that among non-blue-collar voters) does
+not depend on the proportion of blue-collar voters in the precincts.
+That is, $E(W_{i1} | X_i)= E(W_{i1})$ and
+$E(W_{i2} | X_i) = E(W_{i2})$ are assumed to be constant and do not
+depend on $X_i$.  Under this model, the slope coefficient $\beta$
+represents the difference in the Nazis' expected vote share among
+blue-collar voters and among other voters.  The result indicates that
+blue-collar voters are more likely to cast a ballot for the Nazis on
+average, but the difference is not statistically significant at the
+95% level.
+
+## Question 2
+
+Based on the fitted regression model from the previous question,
+  predict the average Nazi vote share $Y_i$ given various proportions
+  of blue-collar voters $X_i$.  Specifically, plot the predicted value
+  of $Y_i$ (the vertical axis) against various values of $X_i$ within
+  its observed range (the horizontal axis) as a solid line.  Add 95\%
+  confidence intervals as dashed lines.  Give a substantive
+  interpretation of the plot.
+  
+## Answer 2
+
+```{r}
+blue.range <- seq(from = 0, to = 1, by = 0.01)
+blue.pred <- predict(simplefit, interval = "confidence", 
+                     newdata = data.frame(shareblue = blue.range))
+plot(blue.range, blue.pred[, "fit"], col = "red",
+     xlim = c(0, 1), ylim = c(0.3, 0.6), type = "l", 
+     xlab = "Blue-Collar Share", ylab = "Nazi Vote Share",
+     main = "Predicted Blue-Collar Support") # predicted
+lines(blue.range, blue.pred[, "lwr"], lty = "dashed", col = "blue")
+lines(blue.range, blue.pred[, "upr"], 
+      lty = "dashed", col = "blue") # confidence intervals
+```
+
+The graph indicates that as the blue-collar share goes up, so too does
+the Nazi vote-share, although the wide confidence intervals suggest
+that the evidence for this relationship is rather weak.
+
+## Question 3
+
+Fit the following alternative linear regression model,
+
+  $$
+    E(Y_i | X_i) = \alpha^\ast X_i + (1-X_i) \beta^\ast
+  $$
+  Note that this model does not have an intercept.  How should one
+  interpret $\alpha^\ast$ and $\beta^\ast$?  How are these parameters
+  related to the linear regression model given in Question 1?
+  
+## Answer 3
+
+Comparing this equation  with the equations above shows that under this alternative linear
+regression model we have $E(W_{1i} \mid X_i) = \alpha^\ast$ and
+$E(W_{2i} | X_i)=\beta^\ast$.  Thus, the relationship between the
+two linear models is characterized by $\alpha = \beta^\ast$ and
+$\beta = \beta^\ast - \alpha^\ast$.  Both models are based on the
+assumption that the average proportion of voters voting for Nazis
+among each occupational group does not depend on the occupational
+composition of each precinct, i.e., $E(W_{ij} | X_i)= E(W_{ij})$
+for $j=1,2$.
+
+```{r}
+nazis$shareothers <- 1 - nazis$shareblue
+altfit <- lm(sharenazis ~ -1 + shareblue + shareothers, 
+             data = nazis)
+summary(altfit)
+confint(altfit)
+```
+
+The result implies that `r round(coef(altfit)["shareblue"], 3)*100`% of blue-collar voters were estimated to have voted for the Nazi party.  The 95% confidence interval is given by [`r round(confint(altfit)["shareblue",], 3)*100`].
+
+## Question 4
+
+Fit a linear regression model where the overall Nazi vote share
+  is regressed on the proportion of each occupation.  The model should
+  contain no intercept and five predictors, each representing the
+  proportion of a certain occupation type.  Interpret the estimate of
+  each coefficient and its 95% confidence interval.  What assumption
+  is necessary to permit your interpretation?
+  
+## Answer 4
+
+```{r}
+fit <- lm(sharenazis ~ -1 + shareself + shareblue + sharewhite + 
+              sharedomestic + shareunemployed, data = nazis)
+summary(fit) # coefficients
+confint(fit) # 95% confidence intervals
+```
+
+It seems that support for the Nazis was highest among self-employed
+voters, whereas very few domestic employees and unemployed individuals
+supported Nazis. However, the coefficients do not quite make sense, as
+they imply that if a precinct was 100% self-employed, then 111% of
+voters would vote Nazi, and if a precinct was 100% unemployed, then
+negative 3% of voters would vote Nazi. This could be a sign of a
+possible violation of the assumption.  It could also be the case that
+sampling variability leads to the estimates being outside of the
+range.
+
+As before, we make the assumptions that the average proportion of 
+Nazi voters does not depend on the occupational composition of each 
+precinct, and that there is exogeneity, i.e. the conditional 
+expectation of the error term given the explanatory variables is the 
+same as its unconditional expectation.
+
+## Question 5
+
+Finally, we consider a model-free approach to ecological
+  inference.  That is, we ask how much we can learn from the data
+  alone without making an additional modeling assumption. For each
+  precinct, obtain the smallest value that is logically possible for
+  $W_{i1}$ by considering the scenario in which all non-blue-collar
+  voters in precinct $i$ vote for the Nazis.  Express this value as a
+  function of $X_i$ and $Y_i$.  Similarly, what is the largest
+  possible value for $W_{i1}$?  Calculate these bounds, keeping in
+  mind that the value for $W_{i1}$ cannot be negative or greater than
+  1.  Finally, compute the bounds for the nation-wide proportion of
+  blue-collar voters who voted for the Nazis (i.e., combining the
+  blue-collar voters from all precincts by computing their weighted
+  average based on the number of blue-collar voters).  Give a brief
+  substantive interpretation of the results.
+  
+## Answer 5
+
+To compute the bounds, we solve for $W_{i1}$ within each precinct,
+yielding $W_{i1} = \frac{(Y_i - (1 - X_i) W_{i2})}{X_i}$.  The minimum
+and maximum value of $W_{i1}$ are obtained by setting $W_{i2} = 1$
+(all non-blue collars vote for the Nazis) and $W_{i1} = 0$ (none of
+non-blue-collars vote for the Nazis), respectively. We then adjust the
+minimum and maximum values of $W_{i1}$ to 0 and 1, respectively, if
+those estimates are negative or above 1.  In summary, the bounds are
+given by:
+
+
+$$
+  \max(0, \ \frac{Y_i + X_i - 1}{X_i}) \ \le \ W_{i1} \ \le \ \min(1, \frac{Y_i}{X_i})
+$$
+
+```{r}
+## calculate bounds
+blue.min <- (nazis$sharenazis + nazis$shareblue - 1) / nazis$shareblue
+blue.min[blue.min < 0] <- 0
+blue.max <- nazis$sharenazis / nazis$shareblue
+blue.max[blue.max > 1] <- 1
+## compute nation-wide proportion bounds
+num.blue <- nazis$shareblue * nazis$nvoter # number of blue-collar voters
+c(weighted.mean(blue.min, num.blue), 
+  weighted.mean(blue.max, num.blue))
+```
+
+The no-assumption bounds for $W_{i1}$ are very large, essentially
+ranging from 0 to 1, so this method of analysis does not tell us very
+much about blue-collar support for the Nazis.  In other words, the
+results based on the linear regression model critically rely on the
+assumption that the average vote shares among each occupation group
+are independent of their relative size within a precinct.

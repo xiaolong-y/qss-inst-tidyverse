@@ -1,0 +1,332 @@
+---
+title: "Filedrawer and Publication Bias in Academic Research"
+output: html_document
+---
+
+The peer review process is the main mechanism through which scientific
+communities decide whether a research paper should be published in
+academic journals This exercise is based on:
+
+Franco, A., N. Malhotra, and G. Simonovits. 2014. “[Publication Bias 
+ in the Social Sciences: Unlocking the File 
+ Drawer.](http://dx.doi.org/10.1126/science.1255484)” *Science* 345(6203): 1502–5.
+
+and 
+
+Franco, A., N. Malhotra, and G. Simonovits. 2015. “[Underreporting in 
+ Political Science Survey Experiments: Comparing Questionnaires to 
+ Published Results.](http://dx.doi.org/10.1093/pan/mpv006)” 
+ *Political Analysis* 23(2): 306–12. 
+
+By having other scientists evaluate
+research findings, academic journals hope to maintain the quality of
+their published articles.  However, some have warned that the peer
+review process may yield undesirable consequences.  In particular, the
+process may result in *publication bias* wherein research papers
+with statistically significant results are more likely to be
+published.  To make matters worse, being aware of such a bias in the
+publication process, researchers may be more likely to report findings
+that are statistically significant and ignore others.  This is called
+*filedrawer bias*.
+
+In this exercise, we will explore these potential problems using data
+on a subset of experimental studies that were funded by the
+Time-sharing Experiments in the Social Sciences (TESS) program.  This
+program is sponsored by the National Science Foundation (NSF). The
+data set necessary for this exercise can be found in the csv files
+`filedrawer.csv` and `published.csv`.  The
+`filedrawer.csv` file contains information about 221 research
+projects funded by the TESS program.  However, not all of those
+projects produced a published article.  The `published.csv` file
+contains information about 53 published journal articles based on TESS
+projects. This data set records the number of experimental conditions
+and outcomes and how many of them are actually reported in the
+published article. The tables below present the names and descriptions of the variables from these data
+sets.
+
+------------------------------------------------------------------------------
+ Name                Description (filedrawer.csv)
+ ------------------- ---------------------------------------------------------
+ `DV`                Publication status
+ 
+ `IV`                Statistical significance of the main findings
+ 
+ `max.h`             H-index (highest among authors)
+ 
+ `journal`           Discipline of the journal for published articles
+ 
+ `teasown`           Amount of tea sown in county 
+ 
+ `sex`               Proportion of males in birth cohort
+ 
+ `post`              Indicator variable for introduction of price reforms
+------------------------------------------------------------------------------
+ 
+------------------------------------------------------------------------------
+ Name               Description (published.csv)
+ ------------------- ---------------------------------------------------------
+ `id.p`              Paper identifier
+ 
+ `cond.s`            Number of conditions in the study
+ 
+ `cond.p`            Number of conditions presented in the paper
+ 
+ `out.s`             Number of outcome variables in the study
+ 
+ `out.p`             Number of outcome variables used in the paper
+------------------------------------------------------------------------------
+ 
+## Question 1
+ 
+ We begin by analyzing the data contained in the
+  `filedrawer.csv` file. Create a contingency table for the
+  publication status of papers and the statistical significance of
+  their main findings. Do we observe any distinguishable pattern
+  towards the publication of strong results?  Provide a substantive
+  discussion.
+
+## Answer 1
+  
+```{r}
+## Read the data
+filedrawer <- read.csv("data/filedrawer.csv")
+## Contingency Table
+prop.table(table(filedrawer$DV, filedrawer$IV), margin = 1)
+```
+
+From the table we can easily see that in the case of papers published
+in top journals, 60% of them have strong results.  Articles published
+in non-top journals feature a balance between strong and weak
+results. However, note that the share of published articles either in
+top or non-top journal presenting null-findings is small.
+
+## Question 2
+
+We next examine if there exists any difference in the
+  publication rate of projects with strong vs. weak results as well as
+  with strong vs. null results. To do so, first, create a variable
+  that takes the value of 1 if a paper was published and 0 if it was
+  not published.  Then, perform two-tailed tests of difference of the
+  publication rates for the aforementioned comparisons of groups,
+  using 95% as the significance level. Briefly comment on your
+  findings.
+  
+## Answer 2
+
+```{r}
+filedrawer$pub.2 <- 
+    ifelse(filedrawer$DV == "Published, top" | 
+               filedrawer$DV == "Published, non top", 1, 0)
+## strong results
+pub.strong <- sum(filedrawer$pub.2[filedrawer$IV == "Strong"])
+num.strong <- length(filedrawer$pub.2[filedrawer$IV == "Strong"])
+## weak results
+pub.weak <- sum(filedrawer$pub.2[filedrawer$IV == "Weak"])
+num.weak <- length(filedrawer$pub.2[filedrawer$IV == "Weak"])
+## null results
+pub.null <- sum(filedrawer$pub.2[filedrawer$IV == "Null"])
+num.null <- length(filedrawer$pub.2[filedrawer$IV == "Null"])
+## two-tailed tests of differences in publication rates
+prop.test(c(pub.strong, pub.null), c(num.strong, num.null))
+prop.test(c(pub.strong, pub.weak), c(num.strong, num.weak))
+```
+
+There is a statistically significant difference in the publication
+rates of studies presenting strong results versus those presenting null findings.
+there is not a statistically significant difference between those presenting strong 
+results versus those presenting weak results We have not proven causation, as there might
+be confounding factors such as the ability of the researchers and the
+number of hypotheses being tested, but the test reveals interesting
+patterns about the data.
+
+## Question 3
+
+Using Monte Carlo simulations, derive the distribution of the
+  test statistic under the null hypothesis of no difference for each
+  of the two comparisons you made in the previous question. Do you
+  attain similar p-values (for a two-tailed test) to those obtained in
+  the previous question?
+  
+## Answer 3
+
+```{r}
+sims <- 5000
+z.1 <- z.2 <- rep(NA, sims)
+for (i in 1:sims) {
+    IV.2  <- sample(filedrawer$IV,  replace = FALSE)
+    mean.strong.s <- mean(filedrawer$pub.2[IV.2 == "Strong"])
+    mean.weak.s <- mean(filedrawer$pub.2[IV.2 == "Weak"])
+    mean.null.s <- mean(filedrawer$pub.2[IV.2 == "Null"])
+    z.1[i] <- mean.strong.s - mean.null.s
+    z.2[i] <- mean.strong.s - mean.weak.s 
+}
+## observed z 
+mean.strong <- mean(filedrawer$pub.2[filedrawer$IV == "Strong"])
+mean.weak <- mean(filedrawer$pub.2[filedrawer$IV  == "Weak"])
+mean.null <- mean(filedrawer$pub.2[filedrawer$IV  == "Null"])
+z.1.obs <- mean.strong - mean.null
+z.2.obs <- mean.strong - mean.weak
+## two-sided p-value; proportion of simulated draws less than observed value
+pvalue.1 <- mean(abs(z.1)  >=  z.1.obs)
+pvalue.2 <- mean(abs(z.2)  >=  z.2.obs)
+c(pvalue.1, pvalue.2)
+```
+
+The results using Monte Carlo simulations are quite similar to those presented in Question 2.
+Note that with Monte Carlo simulations, it is possible to get p-values of exactly 0. 
+This is because Monte Carlo simulations are approximations of the sampling distribution. It requires larger simulation sizes to be able to make smaller differentiations between values.
+
+## Question 4
+
+Conduct the following power analysis for a one-sided hypothesis
+  test where the null hypothesis is that there is no difference in the
+  publication rate between the studies with strong results and those
+  with weak results.  The alternative hypothesis is that the studies
+  with strong results are less likely to be published than those with
+  weak results.  Use 95\% as the significance level and assume that
+  the publication rate for the studies with weak results is the same
+  as the observed publication rate for those studies in the data.  How
+  many studies do we need in order to detect a 5 percentage point
+  difference in the publication rate and for the test to attain a
+  power of 95\%? For the number of observations in the data, what is
+  the power of the test of differences in the publication rates?
+
+## Answer 4
+
+```{r}
+## Part 1: Number of Studies
+power.prop.test(n = NULL, p1 = mean.weak + 0.05, p2 = mean.weak, 
+                sig.level = 0.05, alternative = "one.sided",
+                power = 0.95)
+## Part 2: Power of the Test
+n1 <- num.strong
+n0 <- num.weak  
+p1.star <- mean.strong
+p0.star <- mean.weak
+p <- (n1 * p1.star + n0 * p0.star) / (n1 + n0)
+se <- sqrt(p * (1 - p) / n1 + p * (1 - p) / n0)
+se.star <- sqrt(p1.star * (1 - p1.star) / n1 + 
+                    p0.star * (1 - p0.star) / n0) 
+## power
+alpha <- 0.05
+cr.value <- qnorm(1 - alpha/ 2)
+power <- pnorm(-cr.value * se, mean = p1.star - p0.star, sd = se.star) +
+    pnorm(cr.value * se, mean = p1.star - p0.star, 
+          sd = se.star, lower.tail = TRUE)
+power
+```
+
+To achieve a power of 95%, we need more than 2000 studies, which is
+greater than the number of observations in our data.  In addition, the
+power based on the data is approximately `r round(power, 2)*100`,
+which is much less than 95%.
+
+## Question 5
+
+The H-index is a measure of the productivity and citation impact
+  of each researcher in terms of publications.  More capable
+  researchers may produce stronger results.  To shed more light on
+  this issue, conduct a one-sided test for the null hypothesis that
+  the mean H-index is lower or equal for projects with strong results
+  than those with null results.  What about the comparison between
+  strong versus weak results?  Do your findings threaten the ones
+  presented for Question 2?  Briefly explain.
+  
+## Answer 5
+
+```{r}
+t.test(filedrawer$max.h[filedrawer$IV == "Strong"],
+       filedrawer$max.h[filedrawer$IV == "Weak"], 
+       alternative = "greater")
+t.test(filedrawer$max.h[filedrawer$IV == "Strong"], 
+       filedrawer$max.h[filedrawer$IV == "Null"], 
+       alternative = "greater")
+```
+
+As noted above, no statistically significant difference separates the
+maximum H-index of authors whose projects have strong results from
+those with null results. Thus, it appears that it is not ability of
+the researcher that drives the difference in the publication rates of
+articles in the social sciences.
+
+## Question 6
+
+Next, we examine the possibility of filedrawer bias.  To do so,
+  we will use two scatterplots, one that plots the total number of
+  conditions in a study (horizontal axis) against the total number of
+  conditions included in the paper (vertical axis).  Make the size of
+  each dot proportional to the number of corresponding studies, via
+  the `cex` argument.  The second scatterplot will focus on the
+  number of outcomes in the study (horizontal axis) and the number of
+  outcomes presented in the published paper (vertical axis). As in the
+  previous plot, make sure each circle is weighted by the number of
+  cases in each category. Based on these plots, do you observe
+  problems in terms of underreporting?
+  
+## Answer 6
+
+```{r}
+par(cex = 1.5)
+## read the data
+published <- read.csv("data/published.csv")
+## plot 1: underreporting Conditions
+cond.tb <- table("study" = published$cond.s, 
+                 "paper" = published$cond.p) # table of counts
+cond.tb
+cond.data <- 
+    data.frame("study" = rep(1:7, 6), "paper" = rep(0:5, each = 7), 
+               counts = c(cond.tb))
+plot(cond.data$study, cond.data$paper, xlim = c(0, 8), ylim = c(0, 8),
+     cex = cond.data$counts, pch = 20, ylab = "conditions per paper",
+     xlab = "conditions per questionnaire", 
+     main = "Underreporting Conditions in Political Science")
+abline(0,1, col = "red")
+## plot 2: underreporting papers
+out.tb <- table("study" = published$out.s, "paper" = published$out.p)
+out.tb
+out.data <- 
+    data.frame("study" = rep(as.numeric(rownames(out.tb)), 16), 
+               "paper" = rep(as.numeric(colnames(out.tb)), each = nrow(out.tb)),
+               "counts" = c(out.tb))
+plot(out.data$study, out.data$paper, xlim = c(0,25), ylim = c(0,25), 
+     cex = out.data$count, pch = 20, ylab = "Outcomes per paper", 
+     xlab = "Outcomes per questionnaire", 
+     main = "Underreporting Outcomes in Political Science")
+abline(0,1, col = "red")
+```
+
+The large presence of points below the 45 degree line means that
+underreporting is a problem in academic research.
+
+## Question 7
+
+Create a variable that represents the total number of possible
+  hypotheses to be tested in a paper by multiplying the total number
+  of conditions and outcomes presented in the questionnaires. Suppose
+  that these conditions yield no difference in the outcome. What is
+  the average (per paper) probability that at the 95\% significance
+  level we reject at least one null hypothesis?  What about the
+  average (per paper) probability that we reject at least two or three
+  null hypotheses?  Briefly comment on the results.
+
+## Answer 7
+
+We use the binomial CDF to compute these probabilities.
+
+```{r}
+## total number of hypotheses
+k <- published$cond.s * published$out.s
+## at least one rejection
+mean(1 - 0.95^k) 
+mean(1 - pbinom(0, prob = 0.05, size = k)) # using pbinom()
+## at least two 
+mean(1 - 0.95^k - choose(k, 1) * 0.95^(k-1) * 0.05)
+mean(1 - pbinom(1, prob = 0.05, size = k)) # using pbinom()
+## at least three
+mean(1 - 0.95^k - choose(k, 1) * 0.95^(k-1) * 0.05 - 
+         choose(k, 2)* 0.95^(k-2) * 0.05^2)
+mean(1 - pbinom(2, prob = 0.05, size = k)) # using pbinom()
+```
+
+These probabilities are quite high, suggesting that false rejections
+can be frequently reported in academic journals.

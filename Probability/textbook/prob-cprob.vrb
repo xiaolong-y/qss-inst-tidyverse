@@ -1,0 +1,11 @@
+\frametitle{Solution via Monte Carlo Simulation}
+\protect\hypertarget{solution-via-monte-carlo-simulation}{}
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# fraction of trials where at least two bdays are the same}
+\NormalTok{answer }\OtherTok{\textless{}{-}}\NormalTok{ event }\SpecialCharTok{/}\NormalTok{ sims}
+\NormalTok{answer}
+\end{Highlighting}
+\end{Shaded}
+
+Need to make a plot here myself. qss tidyverse p280

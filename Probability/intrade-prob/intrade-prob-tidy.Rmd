@@ -1,0 +1,205 @@
+---
+title: "A Probability Model for Betting Market Election Prediction"
+output: html_document
+---
+
+Earlier in this chapter, we used pre-election polls with a probability model to predict Obama's electoral vote share in the 2008 US election. In this exercise, we will apply a similar procedure to the Intrade betting market data analyzed in an exercise in Chapter 4 (see Section 4.6.1). This exercise is based on David Rothschild (2009). "Forecasting Elections: Comparing Prediction Markets, Polls, and Their Biases." *Public Opinion Quarterly* vol. 73, no. 5, pp. 895–916. The 2008 Intrade data is available as `intrade08.csv`. The variable names and descriptions of this data set are available in table 4.9. Recall that each row of the data set represents daily trading information about the contracts for either the Democratic or Republican Party nominee's victory in a particular state. The 2008 election results data are available as `pres08.csv`, whose variable names and descriptions appear in table 4.1. 
+
+## Question 1
+
+We analyze the contract of the Democratic Party nominee winning a given state $j$. Recall from Section 4.5 that the data set contains the contract price of the market for each state on each day $i$ leading up to the election. We will interpret the `PriceD` as the probability $p_{ij}$ that the Democrat would win state $j$ if the election were held on day $i$. To treat `PriceD` as a probability, divide it by 100 so it ranges from 0 to 1. How accurate is this probability?  Using only the data from the day before Election Day (November 4, 2008) within each state, compute the expected number of electoral votes Obama is predicted to win and compare it with the actual number of electoral votes Obama won. Briefly interpret the result. Recall that the actual total number of electoral votes for Obama is 365, not 364, which is the sum of electoral votes for Obama based on the results data. The 365-total includes a single electoral vote that Obama garnered from Nebraska's 2nd Congressional District. McCain won Nebraska's four other electoral votes because he won the state overall.
+
+## Answer 1  
+
+```{r}
+library("tidyverse")
+```
+
+```{r}
+#intrade08 <- read.csv("data/intrade08.csv", stringsAsFactors = F)
+#message(head(intrade08))
+# from the QSS package: 
+data("intrade08", package = "qss")
+```
+
+First, rescale `PriceD` and `PriceR` to be probabilities by dividing by 100.
+```{r}
+intrade08 <- intrade08 %>%
+  mutate(prob_Obama = PriceD / 100)
+glimpse(intrade08)
+help(glimpse)
+
+glimpse(starwars)
+```
+
+To add electoral votes to the data, load the `pres08` data:
+```{r}
+data("pres08", package = "qss")
+
+intrade08 <- 
+  left_join(
+    intrade08,  
+    select(pres08, state, EV), by = "state"
+  )
+```
+
+The expected number of electoral votes is somewhat different (but close) to actual number of electoral votes: 365 vs. 349.
+```{r}
+intrade_elecday <- filter(intrade08, day == as.Date(x = "2008-11-03"))
+
+intrade_elecday %>%
+  summarise(EV = sum(prob_Obama * EV))
+```
+
+## Question 2
+
+Next, using the same set of probabilities used in the previous question, simulate the total number of electoral votes Obama is predicted to win. Assume that the election in each state is a Bernoulli trial where the probability of success (Obama winning) is $p_{ij}$. Display the results using a histogram. Add the actual number of electoral votes Obama won as a solid line. Briefly interpret the result.
+
+## Answer 2 
+
+First, we can write a function to simulate an election outcome:
+```{r}
+sim_election <- function(.data, p) {
+  victories <- rbinom(nrow(.data), prob = .data[[p]], size = 1)
+  round(sum(victories * .data$EV))
+}
+sim_election(intrade_elecday, "prob_Obama")
+```
+
+Now use a `map` functional to run the function, `sim_election`, `n_sims` times.
+```{r}
+n_sims <- 2048
+ev_dist <- tibble(EV = map_dbl(seq_len(n_sims), ~ sim_election(intrade_elecday, "prob_Obama"))) %>%
+  mutate(winner = if_else(EV > 269, "Obama", "McCain"))
+```
+
+Plot the distribution of the simulations
+```{r}
+EV_ACTUAL <- 365
+ggplot(ev_dist, aes(x = EV, fill = winner)) +
+  geom_histogram(binwidth = 1) +
+  geom_vline(xintercept = EV_ACTUAL) +
+  scale_fill_manual(values = c(Obama = "blue", McCain = "red"))
+  
+```
+
+## Question 3
+
+In prediction markets, people tend to exaggerate the likelihood that the trailing or "long shot" candidate will win. This means that candidates with a low (high) $p_{ij}$ have a true probability that is lower (higher) than their predicted $p_{ij}$. Such a discrepancy could introduce bias into our predictions, so we want to adjust our probabilities to account for it. We do so by reducing the probability for candidates who have a less than 0.5 chance of winning, and increasing the probability for those with a greater than 0.5 chance. We will calculate a new probability $p_{ij}^\ast$ using the following formula proposed by a researcher: $p^\ast_{ij} = \Phi(1.64 \times \Phi^{-1}(p_{ij}))$ where $\Phi(\cdot)$ is the CDF of the standard Normal random variable and $\Phi^{-1}(\cdot)$ is its inverse, the quantile function. The `R` functions `pnorm` and `qnorm` can be used to compute $\Phi(\cdot)$ and $\Phi^{-1}(\cdot)$, respectively. Plot $p_{ij}$, used in the previous questions, against $p_{ij}^\ast$. In addition, plot this function itself as a line. Explain the nature of the transformation.
+
+## Answer 3 
+
+First, plot the probability transformation,
+$$
+p^* = \Phi(1.64 \times \Phi^{-1}(p))
+$$
+```{r}
+trans_prob <- function(p) {
+  pnorm(1.64 * qnorm(p))
+}
+
+probs <- tibble(p = seq(0.01, 0.99, by = 0.01),
+                pstar = trans_prob(p))
+
+ggplot(probs, aes(x = p, y = pstar)) +
+  geom_line() +
+  ylab(quote(p ^ "*")) +
+  xlab(quote(p)) +
+  geom_point(data = mutate(intrade_elecday, prob_Obama_star = trans_prob(prob_Obama)),
+  aes(x = prob_Obama, y = prob_Obama_star))
+
+```
+
+## Question 4
+
+Using the new probabilities $p_{ij}^\ast$, repeat Questions 1 and 2. Do the new probabilities improve predictive performance? **Hint**: you can compute root mean squared error to help determine performance.
+
+## Answer 4  
+```{r}
+intrade_elecday <- 
+  mutate(intrade_elecday,
+         prob_Obama_star = trans_prob(prob_Obama))
+
+summarise(intrade_elecday, sum(prob_Obama_star * EV))
+
+n_sims <- 2048
+ev_dist2 <- tibble(EV = map_dbl(seq_len(n_sims),
+                               ~ sim_election(intrade_elecday,
+                                              "prob_Obama_star"))) %>%
+  mutate(winner = if_else(EV > 269, "Obama", "McCain"))
+
+ggplot(ev_dist2, aes(x = EV, fill = winner)) +
+  geom_histogram(binwidth = 10) +
+  geom_vline(xintercept = EV_ACTUAL) +
+  scale_fill_manual(values = c(Obama = "blue", McCain = "red"))
+  
+```
+
+The new probabilities make the histogram more spiked. As it pushes probabilities away from 0.5, there are fewer effective swing states, and fewer plausible electoral vote combinations.
+
+To see which of these has has better performance, comapare the root mean squared error. Although the expected value of EV under the transformations is slightly farther from the true value than the non-transformed probabilities, the lower variance of the transformed probabilities means offsets it.
+```{r}
+sqrt(mean((ev_dist$EV - EV_ACTUAL) ^ 2))
+sqrt(mean((ev_dist2$EV - EV_ACTUAL) ^ 2))
+```
+
+## Question 5
+
+Compute the expected number of Obama's electoral votes using the new probabilities $p_{ij}^\ast$ for each of the last 120 days of the campaign. Display the result as a time series plot. Briefly interpret the plot.
+
+## Answer 5
+
+```{r}
+intrade08 <- intrade08 %>%
+  mutate(prob_Obama_star = trans_prob(prob_Obama))
+
+# Need to ensure that all days exist
+intrade08_120days <-
+  intrade08 %>%
+  select(day, state, prob_Obama_star, EV) %>%
+  complete(day, state) %>%
+  arrange(state, day) %>%
+  group_by(state) %>%
+  fill(prob_Obama_star, EV) %>%
+  filter(day > as.Date("2008-11-04") - 120, day <= as.Date("2008-11-04"))
+
+intrade08_120days %>%
+  group_by(day) %>%
+  summarise(EV = sum(prob_Obama_star * EV)) %>%
+  ggplot(aes(x = day, y = EV)) +
+  geom_point() + geom_hline(yintercept = 365)
+```
+
+## Question 6
+
+For each of the last 120 days of the campaign, conduct a simulation as done in Question 2 using the new probabilities $p_{ij}^\ast$. Compute the quantiles of Obama's electoral votes at 2.5\% and 97.5\% for each day. Represent the range from 2.5\% to 97.5\% for each day as a vertical line, using a loop. Also, add the estimated total number of Obama's electoral votes across simulations. Briefly interpret the result.
+
+## Answer 6
+
+```{r}
+sim_election <- function(p, EV) {
+  sum(EV * rbinom(length(p), prob = p, size = 1))
+}
+
+sim_election_summary <- function(p, EV, n = 2048) {
+  sims <- map_dbl(seq_len(n), ~ sim_election(p, EV))
+  list(tibble(mean = mean(sims),
+         p025 = quantile(sims, prob = 0.025),
+         p975 = quantile(sims, prob = 0.975)))
+}
+
+intrade08_120days_summary <-
+  intrade08_120days %>%
+  group_by(day) %>%
+  summarise(sims = sim_election_summary(prob_Obama_star, EV)) %>%
+  unnest(sims)
+
+intrade08_120days_summary %>%
+  ggplot(aes(x = day, y = mean, ymin = p025, ymax = p975)) +
+  geom_pointrange() +
+  geom_line()
+  
+```
+
+
+

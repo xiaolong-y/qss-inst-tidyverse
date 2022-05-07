@@ -1,0 +1,82 @@
+---
+title: "Probability and Conditional Probability: R functions"
+date: Summer 2022
+author: "Introduction to Quantitative Social Science"
+institute: "Xiaolong Yang \\ University of Tokyo"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "beaver"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = T,
+                      results = "hide") #show most chunks but omit results
+library(tidyverse)
+```
+Current qss-tidyverse version unavailble -> make one 
+
+## Student's t-test?
+
+```{r, eval=FALSE}
+t.test()
+tidy() #Tidy the result of a test into a summary data.frame
+```
+
+## prop.test?
+
+```{r, eval=FALSE}
+prop.test() #testing the null that the proportions (probabilities of success) in several groups are the same, or that they equal certain given values.
+
+```
+
+## For loop 
+```{r, eval=FALSE}
+for (i in seq_along(years)){
+  conf.level <- 0.05
+  # subset the data for the correct year and variables
+  # then calcuate difference in mean and se
+  data.temp  <- chinawomen %>%
+                filter(biryr == years[i]) %>%
+                group_by(tea) %>%
+                select(sex, tea) %>%
+                summarise(mean = mean(sex), var = var(sex),
+                    nobs = n()) %>%
+                summarise(diff_mean = diff(mean), 
+                    se = sqrt(sum(var / nobs)))
+
+  # record the difference in means
+  diffs[i, 1] <- data.temp[["diff_mean"]]
+  
+  # calculate and record differencee in CIs
+  diffs[i, 2]<- data.temp[["diff_mean"]] - qnorm(1 - conf.level / 2) *data.temp[["se"]] 
+  diffs[i, 3]<- data.temp[["diff_mean"]] + qnorm(1 - conf.level / 2) *data.temp[["se"]] 
+}
+
+```
+
+## regression and use it to estimate DiD 
+
+```{r, eval=FALSE}
+lm()
+```
+
+
+## Todyverse Functions 
+
+```{r, eval = FALSE}
+mutate()
+gather()
+unite()
+spread()
+summarise() # supersede do()
+```
+
+## ggplot functions
+
+```{r, eval=FALSE}
+geom_ribbon() # displays y interval defined by ymin and ymax
+ggtitle("Difference in Mean Sex Ratio, Tea versus non-Tea, 95% CIS")
+```
+

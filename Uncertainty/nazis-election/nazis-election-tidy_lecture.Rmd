@@ -1,0 +1,48 @@
+---
+title: "Probability and Conditional Probability: R functions"
+date: Summer 2022
+author: "Introduction to Quantitative Social Science"
+institute: "Xiaolong Yang \\ University of Tokyo"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "beaver"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = T,
+                      results = "hide") #show most chunks but omit results
+library(tidyverse)
+```
+
+## Ecological inference
+
+```{r, eval=FALSE}
+qt() #Density, distribution function, quantile function and random generation for the t distribution with df degrees of freedom
+```
+
+## Prediction witn modelr
+
+```{r, eval=FALSE}
+library("modelr")
+data_grid() #generate an evenly spaced grid of points from the data
+```
+
+## Regression (multivariate linear regression + perhaps talk about mathematical intuition of ols)
+```{r, eval=FALSE}
+fit <- lm(sharenazis ~ -1 + shareself + shareblue + sharewhite + 
+              sharedomestic + shareunemployed, data = nazis)
+
+summary(fit) # coefficients
+confint(fit) # 95% confidence intervals
+
+weighted.mean
+```
+
+## ggplot functions
+
+```{r, eval=FALSE}
+geom_linerange() # shows the range of the estimates
+```
+
