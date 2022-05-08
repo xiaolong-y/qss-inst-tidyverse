@@ -1,0 +1,281 @@
+---
+ttitle: "Prediction tidyverse"
+author: "Anna Yorozuya"
+institute: "University of Tokyo"
+date: "June 2022"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "beaver"
+---
+
+# Prediction 1 (June 9)
+## Table of Contents
+- Measurement
+
+- Measurement
+
+- Measurement
+
+- Today's in-class assignment: `betting-markets`
+
+
+
+## `stringr` package
+### `stringr` package
+- a package in tidyverse for string manipulation
+- here we use the function `str_c()`
+- for more information, see [here](https://r4ds.had.co.nz/strings.html)
+
+### `str_c` function
+- combining multiple objects into a character string
+- each object will be separated by commas
+
+### example
+```{r include = FALSE}
+library(tidyverse)
+```
+```{r}
+a <- 2
+b <- 6
+print(str_c(a, " times 3 is equal to ", b))
+```
+
+## `lubridate` package
+### `lubridate` package
+- a package in tidyverse for dates-times object
+- for more information, see [here](https://r4ds.had.co.nz/dates-and-times.html)
+
+### `ymd` function
+- converting strings in the format of `year-month-date` into a `date` object
+- when subtracting a `date` object from another, the object will be a `difftime` object.
+
+```{r}
+library(lubridate)
+```
+```{r}
+x <- ymd("2008-11-04")
+y <- ymd("2008/9/1")
+subtraction <- x - y
+class(x)
+class(subtraction)
+```
+
+
+## Combining objects (data frame, vector, or matrix)
+### base R function
+- `cbind(x, y)`: combine x and y by columns
+- `rbind(x, y)`: combine x and y by rows
+- `merge(x, y, by = )`: merging two data frames by common columns or row names
+
+### tidyverse function `bind` (be careful!)
+- `bind_cols(x, y)`: combine x and y by columns
+- `bind_rows(x, y)`: combine x and y by rows
+
+### tidyverse function `mutate-joins`
+- `inner_join(x, y, by = ): includes all rows in x and y
+- `left_join (x, y, by = ): includes all rows in x
+- `right_join (x, y, by = )`: includes all rows in y
+- `full_join (x, y, by = )`: includes all rows in x or y
+
+
+## memo (delete before publishing)
+full_join, bind_cols
+glimpse
+ymd
+filter, select, group_by, summarize, unique, ungroup
+geom_point, geom_vline, geom_hline, theme_classic
+pull
+tibble
+lm, coef, summary
+
+
+# Prediction 2 (June 14)
+## Table of Contents
+- Measurement
+
+- Measurement
+
+- Measurement
+
+- Today's in-class assignment: `conditional-cash-transfer`
+
+## `broom` package
+### what is `broom`?
+- a package in `tidymodels` package
+- converting outputs of baseR functions into tidy data
+- for more information, see [here](https://broom.tidymodels.org/index.html).
+
+### useful functions
+- `tidy()`: summarizes information about model components
+- `glance()`: reports information about the entire model
+- `augment()`: adds informations about observations to a dataset
+
+### useful functions, when used for `lm()` outputs
+- `tidy()`: returns a data frame in which each row is a coefficient
+- `glance()`: returns a one-row dataframe summary of the model
+- `augment()`: returns the original data with fitted values, residuals, and other observation level stats from the model appended to it.
+
+
+## `broom` package: example
+```{r include = FALSE}
+data("face", package = "qss")
+face <- mutate(face,
+                d.share = d.votes / (d.votes + r.votes),
+                r.share = r.votes / (d.votes + r.votes),
+                diff.share = d.share - r.share)
+library(tidymodels)
+```
+
+```{r}
+fit <- lm(diff.share ~ d.comp, data = face)
+glance(fit)
+tidy(fit)
+augment(fit) %>% head()
+```
+
+
+## `modelr` package
+### what is `modelr`?
+- a package for helping modelling in tidyverse framework, especially with pipes
+- for more information, see [here](https://r4ds.had.co.nz/model-basics.html)
+
+### useful functions
+- `add_predictions()`: add the predictions to the original data
+- `add_residuals()`: add the residuals to the original data
+- `data_grid()`: create a data set containing every unique combination of the specified columns from the old data set.
+- `spread_predictions()`: generate two sets of predictions for a new tibble of data
+
+## `modelr` package: example
+```{r include = FALSE}
+library(modelr)
+data("florida", package = "qss")
+data("social", package = "qss")
+```
+```{r}
+fit2 <- lm(Buchanan00 ~ Perot96, data = florida)
+florida_fit2 <- florida %>%
+  add_predictions(fit2) %>%
+  add_residuals(fit2)
+head(florida_fit2)
+```
+```{r}
+fit <- lm(primary2006 ~ messages, data = social)
+unique_messages <- data_grid(social, messages) %>%
+  add_predictions(fit)
+unique_messages
+```
+
+
+
+## `tidyr` package
+### what is `tidyr`?
+- a package in tidyverse helping to tidy data
+- for more data, see [here](https://r4ds.had.co.nz/tidy-data.html) 
+
+### useful function
+- `crossing()`: produce a new data set with all combinations of the specified variable values
+
+```{r include=FALSE}
+social.neighbor <- 
+  filter(social, 
+         messages == "Control" | messages == "Neighbors") %>%
+  mutate(age = 2008 - yearofbirth)
+```
+```{r}
+fit.age <- lm(primary2006 ~ age * messages, data = social.neighbor)
+ate.age <- tidyr::crossing(age = seq(from = 20, to = 80, by = 20),
+         messages = c("Neighbors", "Control")) %>%
+  add_predictions(fit.age) %>%
+  pivot_wider(names_from = messages,
+              values_from = pred) %>%
+  mutate(diff = Neighbors - Control)
+ate.age
+```
+
+## `pivot_longer()` and `pivot_wider()`
+### `pivot_longer()`
+- increase the number of rows, while decreasing the number of columns
+- argument `cols = x`: specify the columns (x) to pivot into longer formats
+- argument `names_to`: name the new columns for storing data from the columns specified in the `cols` argument.
+
+### `pivot_wider()`
+- increase the number of columns, while decreasing the number of rows
+- argument `names_from`: describe which column to get the name of the output column.
+
+```{r include = FALSE}
+data("women", package = "qss")
+library(tidyverse)
+```
+```{r}
+women %>%
+  group_by(reserved) %>%
+  summarize(irrigation = mean(irrigation),
+            water = mean(water)) %>%
+  pivot_longer(names_to = "variable", - reserved) %>%
+  pivot_wider(names_from = reserved) %>%
+  rename("not_reserved" = `0`,
+         "reserved" = `1` ) %>%
+  mutate(diff = reserved - not_reserved)
+```
+
+
+## visualizing regression 1: `geom_point()` + `geom_abline()`
+```{r}
+ggplot() +
+  geom_point(data = face,
+             mapping = aes(x = d.comp, y = diff.share), shape = 1) +
+  geom_abline(slope = coef(fit)["d.comp"],
+              intercept = coef(fit)["(Intercept)"]) +
+  scale_y_continuous("Competence scores for Democrats",
+                     breaks = seq(-1, 1, by = 0.5), limits = c(-1, 1)) +
+  scale_x_continuous("Democratic margin in vote shares",
+                     breaks = seq(0, 1, by = 0.2), limits = c(0, 1)) 
+```
+
+## visualizing regression 2: `geom_point()` + `geom_smooth()`
+```{r}
+ggplot(data = face, mapping = aes(x = d.comp, y = diff.share)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + 
+  scale_y_continuous("Competence scores for Democrats",
+                     breaks = seq(-1, 1, by = 0.5), limits = c(-1, 1)) +
+  scale_x_continuous("Democratic margin in vote shares",
+                     breaks = seq(0, 1, by = 0.2), limits = c(0, 1)) 
+```
+
+## visualizing regression 3: `geom_point()` + `geom_line()`
+```{r include=FALSE}
+fit.age2 <- lm(primary2006 ~ age + 
+                 I(age^2) + messages +
+                 age:messages + I(age^2):messages, 
+               data = social.neighbor)
+y.hat <- data_grid(social.neighbor, age, messages) %>%
+  add_predictions(fit.age2)
+```
+```{r}
+ggplot(y.hat, aes(x = age, y = pred)) +
+  geom_line(aes(linetype = messages,
+                color = messages)) +
+  labs(color = "",
+       linetype = "", y = "Predicted \nturnout rate",
+       x = "Age") +
+  xlim(20, 90) +
+  theme(legend.position = "bottom")
+```
+
+## memo (delete before publishing)
+library, data, glimpse
+mutate, group_by, summarize, ungroup, pivot_wider, spread
+lm
+`modelr` package
+optional: add_predictions
+geom_line, geom_boxplot, ggtitle, geom_smooth
+
+
+# Reference
+## Reference
+
+- [R for data science](http://r4ds.had.co.nz)
+
+- [R cheatsheet - visualization](https://www.rstudio.com/resources/cheatsheets/)
