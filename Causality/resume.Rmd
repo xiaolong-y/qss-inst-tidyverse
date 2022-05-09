@@ -11,7 +11,7 @@ output:
 ---
 
 ## Load data and packages
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 library(tidyverse)
 library(qss)
 
@@ -68,6 +68,5 @@ callback.by.firstname <- resume %>%
   summarize(callback = mean(call))
 
 head(callback.by.firstname)
-
 ```
 
