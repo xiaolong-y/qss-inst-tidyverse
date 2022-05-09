@@ -11,22 +11,26 @@ output:
     colortheme: "beaver"
 ---
 
-## Tidyverse: A dialect of R
-- Subsetting Data: slice(), select(), filter()
-- Pipe operator: %>%
-- Adding new variables: mutate()
-- Summarizing data frames
+## What is tidyverse?
+```{r}
+#![Alt text] (~/Desktop/tidyverse_packages.png)
+```
+- A collection of R packages 
+- Support natural workflow of data analysis
+- Data import, tidying, manipulation, visualization, programming
 
-
-
-## Why Tidyverse?
+## Load tidyverse
 ```{r, eval=FALSE, echo=TRUE}
 #install.packages(tidyverse)
 library("tidyverse")
 ```
-1. Follows logic 
-2. Intuitive
-3. Easier to follow codes
+
+## Base R versus tidyverse syntax
+- When should I use base R? When should I use tidyverse?
+- 
+
+
+
 
 
 
@@ -49,8 +53,6 @@ UNpop %>%
   select(world.pop) %>%
   slice(1:3)
 ```
-
-
 
 ## Adding new variables: mutate()
 ```{r, eval=FALSE, echo=TRUE}
