@@ -10,8 +10,7 @@ output:
     theme: "Madrid"
     colortheme: "beaver"
 ---
-
-## What is tidyverse?
+# What is tidyverse?
 ```{r}
 #![Alt text] (~/Desktop/tidyverse_packages.png)
 ```
@@ -25,67 +24,37 @@ output:
 library("tidyverse")
 ```
 
+# Base R versus tidyverse syntax
 ## Base R versus tidyverse syntax
-- When should I use base R? When should I use tidyverse?
-- 
-
-
-
-
-
-
-## Subsetting Data and Pipe operator
+### Base R syntax
 ```{r, eval=FALSE, echo=TRUE}
-setwd("~/Dropbox/GitHub/qss-inst-tidyverse/Introduction")
 UNpop <- read.csv("data/UNpop.csv")
+class(UNpop)
+head(UNpop)
 
-glimpse(UNpop)
-dim(UNpop)
+UNpop$world.pop # access individual variable
+UNpop[, "world.pop"] # extract the column "world.pop"
+UNpop[1:3, "year"] # subset first three rows of year 
+```
 
-## Subset the first three rows of UNpop with tidyverse
-slice(UNpop, n = 1:3)
+### tidyverse syntax
+```{r, eval=FALSE, echo=TRUE}
+UNpop.tidy <- read_csv("data/UNpop.csv")
+class(UNpop.tidy)
+glimpse(UNpop.tidy)
 
-## Extract the world.pop variable
-select(UNpop, world.pop)
-
-## Pipe operator %>% to link commands together
-UNpop %>%
-  select(world.pop) %>%
+select(UNpop.tidy, world.pop) # extracting the world.pop variable
+UNpop.tidy %>% # subset the first three rows of years
+  select(year) %>%
   slice(1:3)
 ```
 
-## Adding new variables: mutate()
-```{r, eval=FALSE, echo=TRUE}
-## Create an additional column based on existing ones
-UNpop.mill <- UNpop %>%
-                mutate(world.pop.mill = world.pop / 1000) 
+# Summary
+## Summary
+###Differences between Base R/tidyverse?
+- Base R: Lots of $, [[]]
+- Tidyverse: %>% (Forward pipe operator)
 
-## Conditional statement: if_else()
-UNpop.mill <- UNpop.mill %>%
-  mutate(after.1980 = if_else(year >= 1980, "yes", "no"))
-
-## Conditional symbol: %in%
-target.years <- c(1950, 1980, 2000)
-
-UNpop.mill <- UNpop.mill %>% 
-  mutate(year.of.interest = if_else(year %in% target.years, "yes", "no"))
-```
-
-
-
-## Summarizing data frames: summarize()
-```{r, eval=FALSE, echo=TRUE}
-## Base R
-summary(UNpop.mill)
-mean(UNpop.mill$world.pop)
-
-## Tidyverse 
-UNpop.mill %>%
-  summarize(mean.pop = mean(world.pop.mill),
-            median.pop = median(world.pop.mill))
-
-UNpop.mill %>%
-  group_by(after.1980) %>%
-  summarize(mean.pop = mean(world.pop.mill))
-```
+###When to use Base R/tidyverse?
+- 
 
