@@ -48,29 +48,43 @@ library("tidyverse")
 ```
 
 # Base R versus tidyverse syntax
-## Base R versus tidyverse syntax
-### Base R syntax
-```{r, eval=FALSE, echo=TRUE}
+## Example
+
+```{r echo=TRUE}
 UNpop <- read.csv("data/UNpop.csv")
-class(UNpop)
-head(UNpop)
-
-UNpop$world.pop # access individual variable
-UNpop[, "world.pop"] # extract the column "world.pop"
-UNpop[1:3, "year"] # subset first three rows of year 
+UNpop
 ```
 
-### tidyverse syntax
-```{r, eval=FALSE, echo=TRUE}
-UNpop.tidy <- read_csv("data/UNpop.csv")
-class(UNpop.tidy)
-glimpse(UNpop.tidy)
+Let's calculate the \% of increase from 1950!
 
-select(UNpop.tidy, world.pop) # extracting the world.pop variable
-UNpop.tidy %>% # subset the first three rows of years
-  select(year) %>%
-  slice(1:3)
+\newpage
+
+## Base R syntax
+```{r echo=TRUE}
+UNpop_base <- UNpop
+# calculate the ratio compared to 1950
+UNpop_base$vs_1950 <- 
+  UNpop_base$world.pop / UNpop_base$world.pop[1] 
+# convert to percentage increase and round
+UNpop_base$percent_increase <- 
+  round((1 - UNpop_base$vs_1950) * 100, 1)
+UNpop_base
 ```
+
+\newpage
+
+## tidyverse syntax
+```{r, echo=TRUE}
+UNpop_tidy <- UNpop %>% 
+          # calculate the ratio compared to 1950
+  mutate(vs_1950 = world.pop / first(world.pop),
+          # convert to percentage increase and round
+         percent_increase = round(100 * (1 - vs_1950), 1)
+         ) 
+UNpop_tidy
+```
+
+\newpage
 
 # Summary
 ## Summary
