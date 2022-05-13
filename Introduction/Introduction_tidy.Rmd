@@ -67,7 +67,7 @@ UNpop_base$vs_1950 <-
   UNpop_base$world.pop / UNpop_base$world.pop[1] 
 # convert to percentage increase and round
 UNpop_base$percent_increase <- 
-  round((1 - UNpop_base$vs_1950) * 100, 1)
+  round((UNpop_base$vs_1950 - 1) * 100, 1)
 UNpop_base
 ```
 
@@ -79,7 +79,7 @@ UNpop_tidy <- UNpop %>%
           # calculate the ratio compared to 1950
   mutate(vs_1950 = world.pop / first(world.pop),
           # convert to percentage increase and round
-         percent_increase = round(100 * (1 - vs_1950), 1)
+         percent_increase = round(100 * (vs_1950 - 1), 1)
          ) 
 UNpop_tidy
 ```
