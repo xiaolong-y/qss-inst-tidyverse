@@ -11,14 +11,10 @@ output:
 
 # Prediction 1 (June 9)
 ## Table of Contents
-- Measurement
-
-- Measurement
-
-- Measurement
-
+- `stringr` package
+- `lubridate` package
+- Combining objects
 - Today's in-class assignment: `betting-markets`
-
 
 
 ## `stringr` package
@@ -50,7 +46,7 @@ print(str_c(a, " times 3 is equal to ", b))
 - converting strings in the format of `year-month-date` into a `date` object
 - when subtracting a `date` object from another, the object will be a `difftime` object.
 
-```{r}
+```{r include = FALSE}
 library(lubridate)
 ```
 ```{r}
@@ -79,26 +75,15 @@ class(subtraction)
 - `full_join (x, y, by = )`: includes all rows in x or y
 
 
-## memo (delete before publishing)
-full_join, bind_cols
-glimpse
-ymd
-filter, select, group_by, summarize, unique, ungroup
-geom_point, geom_vline, geom_hline, theme_classic
-pull
-tibble
-lm, coef, summary
-
-
 # Prediction 2 (June 14)
 ## Table of Contents
-- Measurement
-
-- Measurement
-
-- Measurement
-
+- `broom` package
+- `modelr` package
+- `tidyr` package
+- `pivot_longer()` and `pivot_wider()`
+- visualizing regression
 - Today's in-class assignment: `conditional-cash-transfer`
+
 
 ## `broom` package
 ### what is `broom`?
@@ -130,7 +115,15 @@ library(tidymodels)
 ```{r}
 fit <- lm(diff.share ~ d.comp, data = face)
 glance(fit)
+```
+
+## `broom` package: example
+```{r}
 tidy(fit)
+```
+
+## `broom` package: example
+```{r}
 augment(fit) %>% head()
 ```
 
@@ -167,7 +160,6 @@ unique_messages
 ```
 
 
-
 ## `tidyr` package
 ### what is `tidyr`?
 - a package in tidyverse helping to tidy data
@@ -176,6 +168,7 @@ unique_messages
 ### useful function
 - `crossing()`: produce a new data set with all combinations of the specified variable values
 
+## `tidyr` package: example
 ```{r include=FALSE}
 social.neighbor <- 
   filter(social, 
@@ -203,6 +196,7 @@ ate.age
 - increase the number of columns, while decreasing the number of rows
 - argument `names_from`: describe which column to get the name of the output column.
 
+## `pivot_longer()` and `pivot_wider()`: example
 ```{r include = FALSE}
 data("women", package = "qss")
 library(tidyverse)
@@ -263,19 +257,3 @@ ggplot(y.hat, aes(x = age, y = pred)) +
   xlim(20, 90) +
   theme(legend.position = "bottom")
 ```
-
-## memo (delete before publishing)
-library, data, glimpse
-mutate, group_by, summarize, ungroup, pivot_wider, spread
-lm
-`modelr` package
-optional: add_predictions
-geom_line, geom_boxplot, ggtitle, geom_smooth
-
-
-# Reference
-## Reference
-
-- [R for data science](http://r4ds.had.co.nz)
-
-- [R cheatsheet - visualization](https://www.rstudio.com/resources/cheatsheets/)
