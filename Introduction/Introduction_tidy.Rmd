@@ -86,6 +86,24 @@ UNpop_tidy
 
 \newpage
 
+## Same task, with different syntax
+### `Base-R`
+```{r eval=FALSE, echo=TRUE}
+UNpop_base$vs_1950 <- 
+  UNpop_base$world.pop / UNpop_base$world.pop[1] 
+UNpop_base$percent_increase <- 
+  round((UNpop_base$vs_1950 - 1) * 100, 1)
+```
+
+### `Tidyverse`
+```{r eval=FALSE, echo=TRUE}
+UNpop_tidy <- UNpop %>% 
+  mutate(vs_1950 = world.pop / first(world.pop),
+         percent_increase = round(100 * (vs_1950 - 1), 1)) 
+```
+
+\newpage
+
 # Summary
 ## Summary
 ###Differences between Base R/tidyverse?

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.1.29)  13 MAY 2022 21:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.1.29)  13 MAY 2022 22:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1105,9 +1105,14 @@ Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-
 
 (./Introduction_tidy.vrb) [10
 
-] [11
+]
+\openout4 = `Introduction_tidy.vrb'.
+
+(./Introduction_tidy.vrb) [11
 
 ] [12
+
+] [13
 
 ]
 \tf@nav=\write6
@@ -1121,11 +1126,11 @@ Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-
 
 (./Introduction_tidy.aux) ) 
 Here is how much of TeX's memory you used:
- 24663 strings out of 480227
- 485226 string characters out of 5893878
+ 24713 strings out of 480227
+ 486580 string characters out of 5893878
  756990 words of memory out of 5000000
- 42065 multiletter control sequences out of 15000+600000
- 488810 words of font info for 51 fonts, out of 8000000 for 9000
+ 42104 multiletter control sequences out of 15000+600000
+ 492144 words of font info for 55 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  99i,15n,104p,1014b,630s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/shomiyazaki/Library/TinyTeX/texmf-dist/fonts
@@ -1137,10 +1142,10 @@ type1/public/lm/lmsso10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/font
 s/type1/public/lm/lmtt10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fon
 ts/type1/public/lm/lmtt12.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fo
 nts/type1/public/lm/lmtti10.pfb>
-Output written on Introduction_tidy.pdf (12 pages, 244639 bytes).
+Output written on Introduction_tidy.pdf (13 pages, 250622 bytes).
 PDF statistics:
- 227 PDF objects out of 1000 (max. 8388607)
- 156 compressed objects within 2 object streams
- 35 named destinations out of 1000 (max. 500000)
- 12515 words of extra memory for PDF output out of 14400 (max. 10000000)
+ 266 PDF objects out of 1000 (max. 8388607)
+ 181 compressed objects within 2 object streams
+ 40 named destinations out of 1000 (max. 500000)
+ 14641 words of extra memory for PDF output out of 17280 (max. 10000000)
 
