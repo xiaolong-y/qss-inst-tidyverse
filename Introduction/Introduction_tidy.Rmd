@@ -10,13 +10,36 @@ output:
     theme: "Madrid"
     colortheme: "beaver"
 ---
-# What is tidyverse?
-```{r}
-#![Alt text] (~/Desktop/tidyverse_packages.png)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(width = 100)
+library(tidyverse)
+library(knitr)
+library(cowplot)
+```
+
+# What is `Tidyverse`?
+
+## What is `R`?
+A program language!
+```{r fig.show="hold", out.width="80%", fig.align='center'}
+ggdraw() + 
+  draw_image("figure/R_as_a_language.png") 
+```
+*Source: RStudio*
+
+\newpage
+## Then, what is `Tidyverse`?
+```{r fig.show="hold", out.width="30%", fig.align='center'}
+ggdraw() + 
+  draw_image("figure/tidyverse_logo.png") 
 ```
 - A collection of R packages 
 - Support natural workflow of data analysis
 - Data import, tidying, manipulation, visualization, programming
+
+\newpage
 
 ## Load tidyverse
 ```{r, eval=FALSE, echo=TRUE}
