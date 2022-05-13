@@ -13,6 +13,7 @@ output:
 library(tidyverse)
 data(afghan, package = "qss")
 ```
+
 # Measurement 1 (June 2)
 ## Table of Contents
 - Handling missing data
@@ -30,7 +31,7 @@ data(afghan, package = "qss")
 - Description: remove all observations(rows) with at least one missing value from a data frame
 - Arguments: the name of data frame
 - Corresponding base R function: `na_omit()`
-- **warning: check how many NAs are in the data frame before applying listwise deletion!**
+- **Warning: check how many NAs are in the data frame before applying listwise deletion!**
 
 
 ## Example for `arrange()`
@@ -72,16 +73,16 @@ afghan %>%
 
 ## Basics of `ggplot2`
 ### Basic syntax
-| ggplot(data = DATA) + 
-|   GEOM_FUNCTION(mapping = aes(MAPPINGS)) + 
-|   ADDITIONAL_FUNCTIONS
-**Add the components with `+`**
+| ggplot(data = **DATA**) + 
+|   **GEOM_FUNCTION**(mapping = aes(**MAPPINGS**)) + 
+|   **ADDITIONAL_FUNCTIONS**
+|       * Add the components with `+`
 
 ### Elements
-- DATA: specify the dataset to use in the graph
-- GEOM_FUNCTION: starting from`geom_`. specify the types of figures such as bar plot or histogram.
-- MAPPINGS: defines how variables in your dataset are mapped to visual properties. commonly used arguments are `x` and `y` to specify which variables to map to each axis.
-- ADDITIONAL_FUNCTIONS
+- **DATA**: specify the dataset to use in the graph
+- **GEOM_FUNCTION**: starting from`geom_`. specify the types of figures such as bar plot or histogram.
+- **MAPPINGS**: defines how variables in your dataset are mapped to visual properties. commonly used arguments are `x` and `y` to specify which variables to map to each axis.
+- **ADDITIONAL_FUNCTIONS**
 
 
 ## `ggplot2`: `GEOM_FUNCTION`
@@ -92,6 +93,7 @@ afghan %>%
 - `geom_boxplot()`: box plot
 - `geom_line()`: line chart
 - `geom_smooth()`: smooth line, mainly for regression
+- `geom_ribbon()`: show confidence intervals
 
 ### Line
 - `geom_abline()`: intercept, slope
@@ -108,17 +110,18 @@ afghan %>%
 - `size = variable`: assign unique size for each value of the variable
 - `alpha = variable`: control the level of transparency for each value
 - `shape = variable`: change the shape of points in `geom_point`
-- `position = `: `fill` for stacking, `dodge` for avoiding overlapping, `jitter` for solving overplotting
-**All of those above should be within `aes()`**
+- `position = `: `fill` for stacking, `dodge` for avoiding overlapping, `jitter` for solving overplotting\
+**All of those above should be within `aes()`**\
 If it goes outside of `aes()`, the above arguments will be applied to all the variables, regardless of the value, unless specified.
 
 
 ## `ggplot2`: `ADDITIONAL_FUNCTIONS`
 ### Scales
-Map the data values to visual values
-| `scale_*_**`, where
-|    *: aesthetic to adjust (x, y, fill, etc.)
-|    **: prepackaged scale to use 
+| Map the data values to visual values
+|  **`scale_!_!!`**, where
+|     **!**: aesthetic to adjust (x, y, fill, etc.)
+|     **!!**: prepackaged scale to use 
+
 - `scale_x_discrete()`: set the discrete values for visualization
 - `scale_x_continuous()`: set the continuous values for visualization
 - `scale_fill_discrete()`: fill the plot with discrete values
@@ -234,6 +237,8 @@ binwidth = 5,
   labs(title = "Distribution of \nrespondent's age",
        y = "Age", x = "Density")
 ```
+
+## Example: gridExtra
 ```{r}
 ## The education histogram
 educ_hist <- ggplot(afghan, aes(x = educ.years, y = ..density..)) +
@@ -251,26 +256,15 @@ grid.arrange(age_hist, educ_hist, ncol = 2)
 ```
 
 
-## memo (delete before publishing)
-filter, summarize(corr, use), select
-ggplot, geom_point, geom_histogram(bins), xlab, ggtitle
-mutate(if_else, is.na, as.double)
-qqplot
-
 
 # Measurement 2 (June 7)
 ## Table of Contents
 - Review of `ggplot2`
-
 - `tidymodels` package
-
-
 - Today's in-class assignment: `political-efficacy`
 
 
-## Review: `ggplot2`
-
-
+# Review: `ggplot2`
 ## Example: Bar plot (basic)
 ```{r}
 ggplot(data = afghan, # Tell R what data to use
@@ -335,17 +329,3 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
 ### function `tidy()`
 - description: convert the output of a model into a tibble
 - argument: the output of an R model (such as `kmeans()`)
-
-
-## memo (delete before publishing)
-group_by, ungroup, summarize, mutate (~), filter, 
-ggplot, geom_bar (position, stat), labs, geom_histogram, geom_vline, annotate, labs
-qqplot
-
-# Reference
-## Reference
-
-- [R for data science](http://r4ds.had.co.nz)
-
-- [R cheatsheet - visualization](https://www.rstudio.com/resources/cheatsheets/)
-
