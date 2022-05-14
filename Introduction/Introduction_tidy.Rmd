@@ -106,11 +106,15 @@ UNpop_tidy <- UNpop %>%
 
 # Summary
 ## Summary
-###Differences between Base R/tidyverse?
-- Base R: Lots of $, [[]]
-- Tidyverse: %>% (Forward pipe operator)
+### Differences between Base R/tidyverse?
+- Base R: Lots of **$** and **[[]]**
+- Tidyverse: **%>%** (Forward pipe operator)
 
-###When to use Base R/tidyverse?
+```{r fig.show="hold", out.width="50%", fig.align='center'}
+ggdraw() + 
+  draw_image("figure/pipe.png") 
+```
+*Source: RStudio*
+
+### When to use Base R/tidyverse?
 - Combination of both
-
-

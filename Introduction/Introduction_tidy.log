@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.1.29)  13 MAY 2022 22:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.1.29)  14 MAY 2022 22:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1112,9 +1112,18 @@ Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-
 
 ] [12
 
-] [13
-
 ]
+<Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf, id=208, 722.7pt x
+ 365.365pt>
+File: Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf Graphic file 
+(type pdf)
+<use Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf>
+Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-9-
+1.pdf  used on input line 329.
+(pdftex.def)             Requested size: 171.14767pt x 86.5242pt.
+[13
+
+ <./Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf>]
 \tf@nav=\write6
 \openout6 = `Introduction_tidy.nav'.
 
@@ -1126,26 +1135,27 @@ Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-
 
 (./Introduction_tidy.aux) ) 
 Here is how much of TeX's memory you used:
- 24713 strings out of 480227
- 486580 string characters out of 5893878
+ 24744 strings out of 480227
+ 487897 string characters out of 5893878
  756990 words of memory out of 5000000
- 42104 multiletter control sequences out of 15000+600000
- 492144 words of font info for 55 fonts, out of 8000000 for 9000
+ 42127 multiletter control sequences out of 15000+600000
+ 495114 words of font info for 58 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 99i,15n,104p,1014b,630s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 99i,15n,104p,1014b,709s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/shomiyazaki/Library/TinyTeX/texmf-dist/fonts
 /enc/dvips/lm/lm-ec.enc}</Users/shomiyazaki/Library/TinyTeX/texmf-dist/fonts/ty
 pe1/public/lm/lmss10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fonts/t
 ype1/public/lm/lmss12.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fonts/
 type1/public/lm/lmss8.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fonts/
-type1/public/lm/lmsso10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/font
-s/type1/public/lm/lmtt10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fon
-ts/type1/public/lm/lmtt12.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fo
-nts/type1/public/lm/lmtti10.pfb>
-Output written on Introduction_tidy.pdf (13 pages, 250622 bytes).
+type1/public/lm/lmssbx10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/fon
+ts/type1/public/lm/lmsso10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/f
+onts/type1/public/lm/lmtt10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/
+fonts/type1/public/lm/lmtt12.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist
+/fonts/type1/public/lm/lmtti10.pfb>
+Output written on Introduction_tidy.pdf (13 pages, 419100 bytes).
 PDF statistics:
- 266 PDF objects out of 1000 (max. 8388607)
- 181 compressed objects within 2 object streams
- 40 named destinations out of 1000 (max. 500000)
- 14641 words of extra memory for PDF output out of 17280 (max. 10000000)
+ 307 PDF objects out of 1000 (max. 8388607)
+ 202 compressed objects within 3 object streams
+ 42 named destinations out of 1000 (max. 500000)
+ 16772 words of extra memory for PDF output out of 17280 (max. 10000000)
 
