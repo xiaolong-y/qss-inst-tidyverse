@@ -10,118 +10,70 @@ output:
     theme: "Madrid"
     colortheme: "beaver"
 ---
+## Table of Contents
+- Subset data 
+- Summarize data
+- Add new variable
 
-## Load data and packages
-```{r, eval=FALSE, echo=TRUE}
+## Load packages and data
+```{r, eval = FALSE, echo = TRUE}
+## load packages
 library(tidyverse)
 library(qss)
 
-data(resume, package = "qss")
-```
-
-# Exercise 
-## Subsetting Data and Pipe operator
-```{r, eval=FALSE, echo=TRUE}
-setwd("~/Dropbox/GitHub/qss-inst-tidyverse/Introduction")
-UNpop <- read.csv("data/UNpop.csv")
-
-glimpse(UNpop)
-dim(UNpop)s
-
-## Subset the first three rows of UNpop with tidyverse
-slice(UNpop, n = 1:3)
-
-## Extract the world.pop variable
-select(UNpop, world.pop)
-
-## Pipe operator %>% to link commands together
-UNpop %>%
-  select(world.pop) %>%
-  slice(1:3)
-```
-
-## Adding new variables: mutate()
-```{r, eval=FALSE, echo=TRUE}
-## Create an additional column based on existing ones
-UNpop.mill <- UNpop %>%
-                mutate(world.pop.mill = world.pop / 1000) 
-
-## Conditional statement: if_else()
-UNpop.mill <- UNpop.mill %>%
-  mutate(after.1980 = if_else(year >= 1980, "yes", "no"))
-
-## Conditional symbol: %in%
-target.years <- c(1950, 1980, 2000)
-
-UNpop.mill <- UNpop.mill %>% 
-  mutate(year.of.interest = if_else(year %in% target.years, "yes", "no"))
-```
-
-## Summarizing data frames: summarize()
-```{r, eval=FALSE, echo=TRUE}
-## Base R
-summary(UNpop.mill)
-mean(UNpop.mill$world.pop)
-
-## Tidyverse 
-UNpop.mill %>%
-  summarize(mean.pop = mean(world.pop.mill),
-            median.pop = median(world.pop.mill))
-
-UNpop.mill %>%
-  group_by(after.1980) %>%
-  summarize(mean.pop = mean(world.pop.mill))
-```
-
-## Pipe operations
-```{r, eval=FALSE, echo=TRUE}
-setwd("~/Dropbox/GitHub/qss-inst-tidyverse/Causality")
+## load data
 resume <- read_csv("data/resume.csv")
+```
+
+## Subset data
+- `select`: Return columns by name/number/etc.
+- `filter`: Return rows by name/number/etc.
+
+```{r, eval = FALSE, echo = TRUE}
+## subset data with first name
+resumeN <- select(resume, firstname)
+
+## subset data with black names
+resumeB <- filter(resume, race == "black")
+
+## subset data with black, female-sounding names
+resumeBf <- filter(resume, race == "black" & sex == "female")
+```
+
+## Summarize data
+```{r, eval = FALSE, echo = TRUE}
+## callback rate for black female names
+Bf_callback <- filter(resume, race == "black" & sex =="female") %>%
+  summarize(callback_rate = mean(call, na.rm = TRUE))
+
+## callback rate for white female names
+Wf_callback <- filter(resume, race == "white" & sex == "female") %>%
+  summarize(callback_rate = mean(call, na.rm = TRUE))
+
+## difference between white and black women
+Wf_callback - Bf_callback
+```
+
+## Add new variable
+- calculate target values
+- create factor variable
+```{r, eval = FALSE, echo = TRUE}
+## calculate race gap in callback rate
+race_gap_by_sex <- resume %>%
+  group_by(race, sex) %>%
+  summarize(mean(call)) %>%
+  pivot_wider(names_from = race,
+              values_from = callback) %>%
+  mutate(race_gap = white - black)
+
+## create a factor variable that takes one of the four values
+resume <- resume %>%
+  mutate(type = case_when(race == "black" & sex == "female" ~ "BlackFemale",
+                          race == "black" & sex == "male" ~ "BlackMale",
+                          race == "white" & sex == "female" ~ "WhiteFemale",
+                          race == "white" & sex == "male" ~ "WhiteMale",
+                          TRUE ~ "Other"))
 
 head(resume)
-tail(resume)
-glimpse(resume)
-
-race.call.summary <- resume %>%
-  group_by(race, call) %>%
-  count()
-
-race.call.summary
-
-race.call.tab <- race.call.summary %>%
-  pivot_wider(names_from = call,
-              values_from = n) %>%
-  rename(no_callback = "0", 
-         yes_callback = "1") %>%
-  mutate(total = no_callback + yes_callback,
-         callback_rate = yes_callback/total)
-
-race.call.tab
-```
-
-## Recode variables
-```{r, eval=FALSE, echo=TRUE}
-## Simple conditional statements
-resume.binary <- resume %>%
-  mutate(BlackFemale = if_else(race == "black" &
-                               sex == "female", 1, 0))
-
-## Recode variables
-resume <- resume %>%
-  mutate(type = case_when(race == "black" & sex == "male" ~ "BlackMale",
-                          race == "black" & sex == "female" ~ "BlackFemale",
-                          race == "while" & sex == "male" ~ "WhileMale",
-                          race == "white" & sex == "female" ~ "WhiteFemale",
-                          TRUE ~ "other")) 
-```
-
-## Title TBD
-```{r, eval=FALSE, echo=TRUE}
-callback.by.firstname <- resume %>%
-  group_by(firstname) %>%
-  select(firstname, call) %>%
-  summarize(callback = mean(call))
-
-head(callback.by.firstname)
 ```
 
