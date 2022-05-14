@@ -7,7 +7,6 @@ output:
   beamer_presentation:
     theme: "Madrid"
     colortheme: "beaver"
-    highlight: zenburn
 ---
 
 ```{r include = FALSE}
@@ -189,7 +188,7 @@ ggplot(data = filter(congress, congress == 80), aes(x = dwnom1, y = dwnom2)) +
 
 \tiny
 
-```{r fig.show="hold", out.width="40%", fig.align='center'}
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(x = age)) + # the data and initial aes() 
   geom_histogram(aes(y = ..density..), # histogram, additional aes()
                  binwidth = 5, # how wide for each bin
@@ -282,7 +281,10 @@ qqplot
 
 
 ## Example: Bar plot (basic)
-```{r fig.show="hold", out.width="30%", fig.align='center'}
+
+\tiny
+
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(data = afghan, # Tell R what data to use
     aes(x = as.factor(violent.exp.ISAF))) + # specify the x-axis 
   geom_bar(aes(y = ..prop.., # add a bar plot layer
@@ -297,6 +299,9 @@ ggplot(data = afghan, # Tell R what data to use
 - `scale_x_discrete()`: indicate which value to display in the x-axis
 
 ## Example: Bar plot (advanced)
+
+\tiny
+
 ```{r include = FALSE}
 afghan_reshape <- afghan %>%
   pivot_longer(violent.exp.ISAF:violent.exp.taliban,
@@ -304,7 +309,7 @@ afghan_reshape <- afghan %>%
                values_to = "harm")
 ```
 
-```{r fig.show="hold", out.width="30%", fig.align='center'}
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(data = afghan_reshape,  
        aes(x = as.factor(harm))) +
 geom_bar(aes(y = ..prop.., 
@@ -322,14 +327,14 @@ geom_bar(aes(y = ..prop..,
 
 
 ## Example: Boxplot (basic)
-```{r fig.show="hold", out.width="30%", fig.align='center'}
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(y = age)) +
   geom_boxplot() +
   labs(y = "Age", x = "", title = "Distribution of Age")
 ```
 
 ## Example: Boxplot (advanced)
-```{r fig.show="hold", out.width="30%", fig.align='center'}
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
   labs(y = "Year of Education", x = "Province", title = "Distribution of Age")
