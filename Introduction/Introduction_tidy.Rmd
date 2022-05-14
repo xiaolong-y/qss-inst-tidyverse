@@ -10,13 +10,36 @@ output:
     theme: "Madrid"
     colortheme: "beaver"
 ---
-# What is tidyverse?
-```{r}
-#![Alt text] (~/Desktop/tidyverse_packages.png)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(width = 100)
+library(tidyverse)
+library(knitr)
+library(cowplot)
+```
+
+# What is `Tidyverse`?
+
+## What is `R`?
+A program language!
+```{r fig.show="hold", out.width="80%", fig.align='center'}
+ggdraw() + 
+  draw_image("figure/R_as_a_language.png") 
+```
+*Source: RStudio*
+
+\newpage
+## Then, what is `Tidyverse`?
+```{r fig.show="hold", out.width="30%", fig.align='center'}
+ggdraw() + 
+  draw_image("figure/tidyverse_logo.png") 
 ```
 - A collection of R packages 
 - Support natural workflow of data analysis
 - Data import, tidying, manipulation, visualization, programming
+
+\newpage
 
 ## Load tidyverse
 ```{r, eval=FALSE, echo=TRUE}
@@ -25,29 +48,61 @@ library("tidyverse")
 ```
 
 # Base R versus tidyverse syntax
-## Base R versus tidyverse syntax
-### Base R syntax
-```{r, eval=FALSE, echo=TRUE}
+## Example
+
+```{r echo=TRUE}
 UNpop <- read.csv("data/UNpop.csv")
-class(UNpop)
-head(UNpop)
-
-UNpop$world.pop # access individual variable
-UNpop[, "world.pop"] # extract the column "world.pop"
-UNpop[1:3, "year"] # subset first three rows of year 
+UNpop
 ```
 
-### tidyverse syntax
-```{r, eval=FALSE, echo=TRUE}
-UNpop.tidy <- read_csv("data/UNpop.csv")
-class(UNpop.tidy)
-glimpse(UNpop.tidy)
+Let's calculate the \% of increase from 1950!
 
-select(UNpop.tidy, world.pop) # extracting the world.pop variable
-UNpop.tidy %>% # subset the first three rows of years
-  select(year) %>%
-  slice(1:3)
+\newpage
+
+## Base R syntax
+```{r echo=TRUE}
+UNpop_base <- UNpop
+# calculate the ratio compared to 1950
+UNpop_base$vs_1950 <- 
+  UNpop_base$world.pop / UNpop_base$world.pop[1] 
+# convert to percentage increase and round
+UNpop_base$percent_increase <- 
+  round((UNpop_base$vs_1950 - 1) * 100, 1)
+UNpop_base
 ```
+
+\newpage
+
+## tidyverse syntax
+```{r, echo=TRUE}
+UNpop_tidy <- UNpop %>% 
+          # calculate the ratio compared to 1950
+  mutate(vs_1950 = world.pop / first(world.pop),
+          # convert to percentage increase and round
+         percent_increase = round(100 * (vs_1950 - 1), 1)
+         ) 
+UNpop_tidy
+```
+
+\newpage
+
+## Same task, with different syntax
+### `Base-R`
+```{r eval=FALSE, echo=TRUE}
+UNpop_base$vs_1950 <- 
+  UNpop_base$world.pop / UNpop_base$world.pop[1] 
+UNpop_base$percent_increase <- 
+  round((UNpop_base$vs_1950 - 1) * 100, 1)
+```
+
+### `Tidyverse`
+```{r eval=FALSE, echo=TRUE}
+UNpop_tidy <- UNpop %>% 
+  mutate(vs_1950 = world.pop / first(world.pop),
+         percent_increase = round(100 * (vs_1950 - 1), 1)) 
+```
+
+\newpage
 
 # Summary
 ## Summary
