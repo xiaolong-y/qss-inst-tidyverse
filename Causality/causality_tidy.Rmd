@@ -6,17 +6,23 @@ date: "5/26/2022"
 output: 
   beamer_presentation:
     slide_level: 2
-    toc: true
+    toc: false
     theme: "Madrid"
     colortheme: "beaver"
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(width = 100)
+```
+
 ## Table of Contents
 - Subset data 
 - Summarize data
 - Add new variable
 
 ## Load packages and data
-```{r, eval = FALSE, echo = TRUE}
+```{r warning=FALSE, message=FALSE}
 ## load packages
 library(tidyverse)
 library(qss)
@@ -29,25 +35,30 @@ resume <- read_csv("data/resume.csv")
 - `select`: Return columns by name/number/etc.
 - `filter`: Return rows by name/number/etc.
 
-```{r, eval = FALSE, echo = TRUE}
+```{r}
 ## subset data with first name
-resumeN <- select(resume, firstname)
+resumeN <- resume %>% 
+  select(firstname)
 
 ## subset data with black names
-resumeB <- filter(resume, race == "black")
+resumeB <- resume %>% 
+  filter(race == "black")
 
 ## subset data with black, female-sounding names
-resumeBf <- filter(resume, race == "black" & sex == "female")
+resumeBf <- resume %>% 
+  filter(race == "black" & sex == "female")
 ```
 
 ## Summarize data
-```{r, eval = FALSE, echo = TRUE}
+```{r}
 ## callback rate for black female names
-Bf_callback <- filter(resume, race == "black" & sex =="female") %>%
+Bf_callback <- resume %>% 
+  filter(race == "black" & sex =="female") %>%
   summarize(callback_rate = mean(call, na.rm = TRUE))
 
 ## callback rate for white female names
-Wf_callback <- filter(resume, race == "white" & sex == "female") %>%
+Wf_callback <- resume %>% 
+  filter(race == "white" & sex == "female") %>%
   summarize(callback_rate = mean(call, na.rm = TRUE))
 
 ## difference between white and black women
@@ -55,17 +66,14 @@ Wf_callback - Bf_callback
 ```
 
 ## Add new variable
-- calculate target values
-- create factor variable
-```{r, eval = FALSE, echo = TRUE}
-## calculate race gap in callback rate
-race_gap_by_sex <- resume %>%
-  group_by(race, sex) %>%
-  summarize(mean(call)) %>%
-  pivot_wider(names_from = race,
-              values_from = callback) %>%
-  mutate(race_gap = white - black)
 
+\tiny
+
+### calculate target values
+The way we did previously with `filter()` and `summarise()`. 
+
+### create factor variable
+```{r}
 ## create a factor variable that takes one of the four values
 resume <- resume %>%
   mutate(type = case_when(race == "black" & sex == "female" ~ "BlackFemale",
