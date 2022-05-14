@@ -7,6 +7,7 @@ output:
   beamer_presentation:
     theme: "Madrid"
     colortheme: "beaver"
+    highlight: zenburn
 ---
 
 ```{r include = FALSE}
@@ -34,6 +35,9 @@ data(afghan, package = "qss")
 
 
 ## Example for `arrange()`
+
+\small
+
 ```{r}
 ## Table for non-missing values of ISAF and Taliban
 afghan %>%
@@ -45,8 +49,11 @@ afghan %>%
   arrange(prop) # compare to arrange(desc(prop))
 ```
 
+\normalsize
 
 ## Example for `drop_na()`
+
+\small
 ```{r}
 nrow(afghan) # original
 afghan.sub.2 <- drop_na(afghan)
@@ -55,7 +62,7 @@ afghan %>%
   drop_na(income) %>%
   nrow() # NAs in income omitted
 ```
-
+\normalsize
 
 # Introduction to `ggplot2`
 ## Introduction to `ggplot2`
@@ -151,35 +158,38 @@ Map the data values to visual values
 - `coord_fixed()`: fix the aspect ratio to square
 
 ## Example: Scatterplot
+
+\tiny 
+
 ```{r include = FALSE}
 library(gridExtra)
 data("congress", package = "qss")
 ```
-```{r}
-ggplot(data = filter(congress, congress == 80),
-       aes(x = dwnom1, y = dwnom2)) +
-  geom_point(aes(shape = party, color = party),
-             show.legend = FALSE) +
+```{r fig.show="hold", out.width="30%", fig.align='center'}
+ggplot(data = filter(congress, congress == 80), aes(x = dwnom1, y = dwnom2)) +
+  geom_point(aes(shape = party, color = party), show.legend = FALSE) +
   scale_color_manual(values = c(Democrat = "blue",
                                  Republican = "red",
                                  Other = "green")) +
   scale_shape_manual(values = c(Democrat = "square",
                                  Republican = "triangle",
                                  Other = "circle")) +
-  scale_y_continuous("Racial liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  scale_x_continuous("Economic\n liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
+  scale_y_continuous("Racial liberalism/conservatism", limits = c(-1.5, 1.5)) +
+  scale_x_continuous("Economic\n liberalism/conservatism",limits = c(-1.5, 1.5)) +
   ggtitle("80th Congress") +
   coord_fixed()
 ```
+
 - `scale_color_manual()`: specify which colors are used for which value
 - `scale_shape_manual()`: specify which shape is used for which value
 - `scale_y_continuous()`/ `scale_x_continuous()`: add title, change the limits
 - `coord_fixed()`: squared aspect ratio
 
 ## Example: Histogram (basic)
-```{r}
+
+\tiny
+
+```{r fig.show="hold", out.width="40%", fig.align='center'}
 ggplot(afghan, aes(x = age)) + # the data and initial aes() 
   geom_histogram(aes(y = ..density..), # histogram, additional aes()
                  binwidth = 5, # how wide for each bin
@@ -195,7 +205,10 @@ ggplot(afghan, aes(x = age)) + # the data and initial aes()
 - `scale_x_continuous()`: change the ticks of x-axis
 
 ## Example: Histogram (advanced)
-```{r}
+
+\tiny 
+
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   geom_histogram(binwidth = 1, center = 0) +
   geom_vline(xintercept = median(afghan$educ.years)) +
@@ -223,29 +236,26 @@ ggplot(afghan, aes(x = educ.years, y = ..density..)) +
 - use the `grid_arrange()`
 
 ## Example: gridExtra
+
+\tiny
+
 ```{r}
 library(gridExtra)
 ## The age histogram
 age_hist <- ggplot(afghan, aes(x = age)) +
-  geom_histogram(aes(y = ..density..),
-binwidth = 5,
-                 boundary = 0) +
+  geom_histogram(aes(y = ..density..), binwidth = 5, boundary = 0) +
   scale_x_continuous(breaks = seq(20, 80, by = 10)) +
-  labs(title = "Distribution of \nrespondent's age",
-       y = "Age", x = "Density")
+  labs(title = "Distribution of \nrespondent's age", y = "Age", x = "Density")
 ```
-```{r}
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ## The education histogram
 educ_hist <- ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   geom_histogram(binwidth = 1, center = 0) +
   geom_vline(xintercept = median(afghan$educ.years)) +
-  annotate(geom = "text", x = median(afghan$educ.years),
-           y = 0.4,
-           label = "median",
-           hjust = -0.1) +
-  labs(title = "Distribution of \nrespondent's education",
-       x = "Years of education",
-       y = "Density")
+  annotate(geom = "text", x = median(afghan$educ.years),y = 0.4, label = "median", hjust = -0.1) +
+  labs(title = "Distribution of \nrespondent's education", x = "Years of education", y = "Density")
+```
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ## Put the plots side-by-side
 grid.arrange(age_hist, educ_hist, ncol = 2)
 ```
@@ -272,7 +282,7 @@ qqplot
 
 
 ## Example: Bar plot (basic)
-```{r}
+```{r fig.show="hold", out.width="30%", fig.align='center'}
 ggplot(data = afghan, # Tell R what data to use
     aes(x = as.factor(violent.exp.ISAF))) + # specify the x-axis 
   geom_bar(aes(y = ..prop.., # add a bar plot layer
@@ -294,7 +304,7 @@ afghan_reshape <- afghan %>%
                values_to = "harm")
 ```
 
-```{r}
+```{r fig.show="hold", out.width="30%", fig.align='center'}
 ggplot(data = afghan_reshape,  
        aes(x = as.factor(harm))) +
 geom_bar(aes(y = ..prop.., 
@@ -312,14 +322,14 @@ geom_bar(aes(y = ..prop..,
 
 
 ## Example: Boxplot (basic)
-```{r}
+```{r fig.show="hold", out.width="30%", fig.align='center'}
 ggplot(afghan, aes(y = age)) +
   geom_boxplot() +
   labs(y = "Age", x = "", title = "Distribution of Age")
 ```
 
 ## Example: Boxplot (advanced)
-```{r}
+```{r fig.show="hold", out.width="30%", fig.align='center'}
 ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
   labs(y = "Year of Education", x = "Province", title = "Distribution of Age")
