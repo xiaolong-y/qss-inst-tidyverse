@@ -10,62 +10,96 @@ output:
     theme: "Madrid"
     colortheme: "beaver"
 ---
-## Table of Contents
-- Subset data 
-- Summarize data
-- Add new variable
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(width = 100)
+library(knitr)
+library(cowplot)
+```
 
 ## Load packages and data
-```{r, eval = FALSE, echo = TRUE}
+```{r warning=FALSE, message=FALSE}
 ## load packages
 library(tidyverse)
 library(qss)
 
 ## load data
 resume <- read_csv("data/resume.csv")
+
+# check data 
+resume
 ```
 
-## Subset data
+## `dplyr` from `Tidyverse`
+
+```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
+ggdraw() + 
+  draw_image("figure/dplyr.png") 
+```
+*Source: RStudio*
+
+# Subset data
+## `select()` and `filter()`
+
 - `select`: Return columns by name/number/etc.
 - `filter`: Return rows by name/number/etc.
 
-```{r, eval = FALSE, echo = TRUE}
+\tiny
+```{r}
 ## subset data with first name
-resumeN <- select(resume, firstname)
-
+resume_sex <- resume %>% 
+  select(sex)
+head(resume_sex, 3)
 ## subset data with black names
-resumeB <- filter(resume, race == "black")
-
-## subset data with black, female-sounding names
-resumeBf <- filter(resume, race == "black" & sex == "female")
+resumeB <- resume %>% 
+  filter(race == "black")
+head(resumeB, 3)
 ```
 
-## Summarize data
-```{r, eval = FALSE, echo = TRUE}
+## Data Wrangling
+
+```{r}
+## subset data with black, female-sounding names
+## Then, let'ss remove the firstname
+resumeBf_without_firstname <- resume %>% 
+  filter(race == "black" & sex == "female") %>% 
+  select(!firstname)
+resumeBf_without_firstname
+```
+
+
+# Summarize data
+## `summarise()`
+\tiny
+```{r}
 ## callback rate for black female names
-Bf_callback <- filter(resume, race == "black" & sex =="female") %>%
+Bf_callback <- resume %>% 
+  filter(race == "black" & sex =="female") %>%
   summarize(callback_rate = mean(call, na.rm = TRUE))
 
+Bf_callback
+
 ## callback rate for white female names
-Wf_callback <- filter(resume, race == "white" & sex == "female") %>%
+Wf_callback <- resume %>% 
+  filter(race == "white" & sex == "female") %>%
   summarize(callback_rate = mean(call, na.rm = TRUE))
+
+Wf_callback
 
 ## difference between white and black women
 Wf_callback - Bf_callback
 ```
 
-## Add new variable
-- calculate target values
-- create factor variable
-```{r, eval = FALSE, echo = TRUE}
-## calculate race gap in callback rate
-race_gap_by_sex <- resume %>%
-  group_by(race, sex) %>%
-  summarize(mean(call)) %>%
-  pivot_wider(names_from = race,
-              values_from = callback) %>%
-  mutate(race_gap = white - black)
+# Add new variable
+## `mutate()`
+\tiny
 
+### calculate target values
+The way we did previously with `filter()` and `summarise()`. 
+
+### create factor variable with `mutate`
+```{r}
 ## create a factor variable that takes one of the four values
 resume <- resume %>%
   mutate(type = case_when(race == "black" & sex == "female" ~ "BlackFemale",
@@ -77,3 +111,10 @@ resume <- resume %>%
 head(resume)
 ```
 
+# Summary
+
+## Let's practice!
+```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
+ggdraw() + 
+  draw_image("figure/dplyr.png") 
+```
