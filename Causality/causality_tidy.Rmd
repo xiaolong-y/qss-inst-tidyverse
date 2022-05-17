@@ -1,8 +1,8 @@
 ---
 title: "Chapter 2: Causality"
 subtitle: "Introduction to Tidyverse functions"
-author: "Claire Liow"
-institute: "University of Tokyo"
+author: "Sho Miyazaki"
+institute: "Keio University"
 date: "5/26/2022"
 output: 
   beamer_presentation:
