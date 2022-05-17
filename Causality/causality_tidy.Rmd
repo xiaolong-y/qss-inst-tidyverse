@@ -1,5 +1,6 @@
 ---
-title: "Causality"
+title: "Chapter 2: Causality"
+subtitle: "Introduction to Tidyverse functions"
 author: "Claire Liow"
 institute: "University of Tokyo"
 date: "5/26/2022"
@@ -40,7 +41,7 @@ ggdraw() +
 *Source: RStudio*
 
 # Subset data
-## `select()` and `filter()`
+## Extract Rows and Columns
 
 - `select`: Return columns by name/number/etc.
 - `filter`: Return rows by name/number/etc.
