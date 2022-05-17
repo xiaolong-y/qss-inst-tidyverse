@@ -41,7 +41,7 @@ ggdraw() +
 *Source: RStudio*
 
 # Subset data
-## Extract Rows and Columns
+## Extract Columns (`select`) and Rows (`filter`)
 
 - `select`: Return columns by name/number/etc.
 - `filter`: Return rows by name/number/etc.
