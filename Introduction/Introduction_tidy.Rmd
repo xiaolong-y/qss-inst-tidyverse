@@ -27,7 +27,7 @@ A program language!
 ggdraw() + 
   draw_image("figure/R_as_a_language.png") 
 ```
-*Source: RStudio*
+*Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
 \newpage
 ## Then, what is `Tidyverse`?
@@ -114,7 +114,7 @@ UNpop_tidy <- UNpop %>%
 ggdraw() + 
   draw_image("figure/pipe.png") 
 ```
-*Source: RStudio*
+*Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
 ### When to use Base R/tidyverse?
 - Combination of both

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.1.29)  14 MAY 2022 22:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2022.1.29)  20 MAY 2022 01:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1066,20 +1066,20 @@ File: Introduction_tidy_files/figure-beamer/unnamed-chunk-1-1.pdf Graphic file
 (type pdf)
 <use Introduction_tidy_files/figure-beamer/unnamed-chunk-1-1.pdf>
 Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-1-
-1.pdf  used on input line 158.
+1.pdf  used on input line 159.
 (pdftex.def)             Requested size: 273.83733pt x 153.65178pt.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 158.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 159.
 [4
 
  <./Introduction_tidy_files/figure-beamer/unnamed-chunk-1-1.pdf>]
-<Introduction_tidy_files/figure-beamer/unnamed-chunk-2-1.pdf, id=87, 439.6425pt
+<Introduction_tidy_files/figure-beamer/unnamed-chunk-2-1.pdf, id=88, 439.6425pt
  x 505.89pt>
 File: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-1.pdf Graphic file 
 (type pdf)
 <use Introduction_tidy_files/figure-beamer/unnamed-chunk-2-1.pdf>
 Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-
-1.pdf  used on input line 175.
+1.pdf  used on input line 176.
 (pdftex.def)             Requested size: 102.68965pt x 118.15855pt.
 [5
 
@@ -1113,13 +1113,13 @@ Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-2-
 ] [12
 
 ]
-<Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf, id=208, 722.7pt x
+<Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf, id=209, 722.7pt x
  365.365pt>
 File: Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf Graphic file 
 (type pdf)
 <use Introduction_tidy_files/figure-beamer/unnamed-chunk-9-1.pdf>
 Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-9-
-1.pdf  used on input line 329.
+1.pdf  used on input line 331.
 (pdftex.def)             Requested size: 171.14767pt x 86.5242pt.
 [13
 
@@ -1137,7 +1137,7 @@ Package pdftex.def Info: Introduction_tidy_files/figure-beamer/unnamed-chunk-9-
 Here is how much of TeX's memory you used:
  24744 strings out of 480227
  487897 string characters out of 5893878
- 756990 words of memory out of 5000000
+ 756989 words of memory out of 5000000
  42127 multiletter control sequences out of 15000+600000
  495114 words of font info for 58 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -1152,10 +1152,10 @@ ts/type1/public/lm/lmsso10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/f
 onts/type1/public/lm/lmtt10.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist/
 fonts/type1/public/lm/lmtt12.pfb></Users/shomiyazaki/Library/TinyTeX/texmf-dist
 /fonts/type1/public/lm/lmtti10.pfb>
-Output written on Introduction_tidy.pdf (13 pages, 419100 bytes).
+Output written on Introduction_tidy.pdf (13 pages, 419416 bytes).
 PDF statistics:
- 307 PDF objects out of 1000 (max. 8388607)
- 202 compressed objects within 3 object streams
+ 309 PDF objects out of 1000 (max. 8388607)
+ 204 compressed objects within 3 object streams
  42 named destinations out of 1000 (max. 500000)
  16772 words of extra memory for PDF output out of 17280 (max. 10000000)
 
