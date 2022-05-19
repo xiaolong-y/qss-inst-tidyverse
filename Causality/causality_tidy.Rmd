@@ -30,6 +30,7 @@ ggdraw() +
 *Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
 ## Load packages and data
+\small
 ```{r warning=FALSE, message=FALSE}
 ## load packages
 library(tidyverse)
