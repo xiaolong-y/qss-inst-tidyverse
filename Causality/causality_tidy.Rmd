@@ -1,6 +1,6 @@
 ---
 title: "Chapter 2: Causality"
-subtitle: "Introduction to Tidyverse functions"
+subtitle: "Data Transformation with Tidyverse Functions"
 author: "Sho Miyazaki"
 institute: "Keio University"
 date: "5/26/2022"
@@ -18,6 +18,16 @@ options(width = 100)
 library(knitr)
 library(cowplot)
 ```
+
+# Overview
+
+## Data Transformation
+
+```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
+ggdraw() + 
+  draw_image("figure/data-science-explore.png") 
+```
+*Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
 ## Load packages and data
 ```{r warning=FALSE, message=FALSE}
@@ -38,9 +48,9 @@ resume
 ggdraw() + 
   draw_image("figure/dplyr.png") 
 ```
-*Source: RStudio*
+*Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
-# Subset data
+# Subset Data
 ## Extract Columns (`select`) and Rows (`filter`)
 
 - `select`: Return columns by name/number/etc.
@@ -58,7 +68,7 @@ resumeB <- resume %>%
 head(resumeB, 3)
 ```
 
-## Data Wrangling
+## Combining Functions
 
 ```{r}
 ## subset data with black, female-sounding names
@@ -70,7 +80,7 @@ resumeBf_without_firstname
 ```
 
 
-# Summarize data
+# Summarize Data
 ## `summarise()`
 \tiny
 ```{r}
@@ -92,7 +102,7 @@ Wf_callback
 Wf_callback - Bf_callback
 ```
 
-# Add new variable
+# Add New Variable
 ## `mutate()`
 \tiny
 
@@ -119,4 +129,4 @@ head(resume)
 ggdraw() + 
   draw_image("figure/dplyr.png") 
 ```
-*Source: RStudio*
+*Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
