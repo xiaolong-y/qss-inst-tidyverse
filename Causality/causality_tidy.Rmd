@@ -60,32 +60,40 @@ ggdraw() +
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
 # Subset Data
-## Extract Columns (`select`) and Rows (`filter`)
+
+## Extract Columns (`select`) 
 
 - `select`: Return columns by name/number/etc.
+```{r}
+## Subset with sex and race columns
+resume_sex_race <- resume %>% 
+  select(sex, race)
+resume_sex_race
+```
+
+
+## Extract Rows (`filter`)
+
 - `filter`: Return rows by name/number/etc.
 
-\tiny
-```{r}
-## subset data with first name
-resume_sex <- resume %>% 
-  select(sex)
-head(resume_sex, 3)
+```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
 ## subset data with black names
 resumeB <- resume %>% 
   filter(race == "black")
-head(resumeB, 3)
+resumeB
 ```
+*Source: [RStudio](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf)*
+
 
 ## Combining Functions
 
 ```{r}
-## subset data with black, female-sounding names
-## Then, let'ss remove the firstname
-resumeBf_without_firstname <- resume %>% 
-  filter(race == "black" & sex == "female") %>% 
+## subset data with white, male-sounding names
+## Then, let's remove the first name
+resumeWm_without_firstname <- resume %>% 
+  filter(race == "white" & sex == "male") %>% 
   select(!firstname)
-resumeBf_without_firstname
+resumeWm_without_firstname
 ```
 
 
