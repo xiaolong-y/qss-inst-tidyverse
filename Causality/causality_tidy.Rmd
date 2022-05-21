@@ -29,6 +29,14 @@ ggdraw() +
 ```
 *Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
+---
+```{r fig.show="hold", out.width="40%", fig.align='center',echo=FALSE}
+ggdraw() + 
+  draw_image("figure/tidyr_logo.png") 
+ggdraw() + 
+  draw_image("figure/dplyr_logo.png") 
+```
+
 ## Load packages and data
 \small
 ```{r warning=FALSE, message=FALSE}
