@@ -1,5 +1,6 @@
 ---
-title: "Introduction to Tidyverse"
+title: "Chapter 1: Introduction"
+subtitle: "What is tidyverse?"
 author: "Claire Liow"
 institute: "University of Tokyo"
 date: "5/24/2022"
@@ -31,7 +32,7 @@ ggdraw() +
 
 \newpage
 ## Then, what is `Tidyverse`?
-```{r fig.show="hold", out.width="30%", fig.align='center'}
+```{r fig.show = "hold", out.width = "30%", fig.align = 'center'}
 ggdraw() + 
   draw_image("figure/tidyverse_logo.png") 
 ```
@@ -40,9 +41,19 @@ ggdraw() +
 - Data import, tidying, manipulation, visualization, programming
 
 \newpage
+## Then, what is `Tidyverse`?
+```{r fig.show = "hold", out.width = "70%", fig.align = 'center'}
+ggdraw() + 
+  draw_image("figure/packages.png") 
+```
+- A collection of R packages 
+- Support natural workflow of data analysis
+- Data import, tidying, manipulation, visualization, programming
+
+\newpage
 
 ## Load tidyverse
-```{r, eval=FALSE, echo=TRUE}
+```{r, eval = FALSE, echo = TRUE}
 #install.packages(tidyverse)
 library("tidyverse")
 ```
@@ -50,7 +61,7 @@ library("tidyverse")
 # Base R versus tidyverse syntax
 ## Example
 
-```{r echo=TRUE}
+```{r echo = TRUE}
 UNpop <- read.csv("data/UNpop.csv")
 UNpop
 ```
@@ -60,7 +71,7 @@ Let's calculate the \% of increase from 1950!
 \newpage
 
 ## Base R syntax
-```{r echo=TRUE}
+```{r echo = TRUE}
 UNpop_base <- UNpop
 # calculate the ratio compared to 1950
 UNpop_base$vs_1950 <- 
@@ -74,7 +85,7 @@ UNpop_base
 \newpage
 
 ## tidyverse syntax
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 UNpop_tidy <- UNpop %>% 
           # calculate the ratio compared to 1950
   mutate(vs_1950 = world.pop / first(world.pop),
@@ -88,7 +99,7 @@ UNpop_tidy
 
 ## Same task, with different syntax
 ### `Base-R`
-```{r eval=FALSE, echo=TRUE}
+```{r eval = FALSE, echo = TRUE}
 UNpop_base$vs_1950 <- 
   UNpop_base$world.pop / UNpop_base$world.pop[1] 
 UNpop_base$percent_increase <- 
@@ -96,7 +107,7 @@ UNpop_base$percent_increase <-
 ```
 
 ### `Tidyverse`
-```{r eval=FALSE, echo=TRUE}
+```{r eval = FALSE, echo = TRUE}
 UNpop_tidy <- UNpop %>% 
   mutate(vs_1950 = world.pop / first(world.pop),
          percent_increase = round(100 * (vs_1950 - 1), 1)) 
@@ -110,7 +121,7 @@ UNpop_tidy <- UNpop %>%
 - Base R: Lots of **$** and **[[]]**
 - Tidyverse: **%>%** (Forward pipe operator)
 
-```{r fig.show="hold", out.width="50%", fig.align='center'}
+```{r fig.show = "hold", out.width = "50%", fig.align = 'center'}
 ggdraw() + 
   draw_image("figure/pipe.png") 
 ```
