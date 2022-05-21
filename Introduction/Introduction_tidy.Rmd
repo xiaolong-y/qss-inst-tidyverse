@@ -36,9 +36,9 @@ ggdraw() +
 ggdraw() + 
   draw_image("figure/tidyverse_logo.png") 
 ```
-- A collection of R packages 
-- Support natural workflow of data analysis
-- Data import, tidying, manipulation, visualization, programming
+>- A collection of R packages 
+>- Support natural workflow of data analysis
+>- Data import, tidying, manipulation, visualization, programming
 
 \newpage
 ## Then, what is `Tidyverse`?
