@@ -162,7 +162,7 @@ Wf_callback - Bf_callback
 ### Don't worry!
 There are many resources you can use, and you don't have to memorize all the functions.
 
-- QSS Text Book
+- QSS Textbook
   + Tidyverse Version is on `Perrusal`
 - Cheetsheets
   + Search "`tidyverse cheetsheets`"
