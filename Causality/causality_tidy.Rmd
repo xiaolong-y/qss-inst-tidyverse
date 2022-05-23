@@ -29,26 +29,44 @@ ggdraw() +
 ```
 *Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
----
-```{r fig.show="hold", out.width="40%", fig.align='center',echo=FALSE}
-ggdraw() + 
-  draw_image("figure/tidyr_logo.png") 
-ggdraw() + 
-  draw_image("figure/dplyr_logo.png") 
-```
-
-## Load packages and data
+## Let's get started with Data
 \small
 ```{r warning=FALSE, message=FALSE}
 ## load packages
 library(tidyverse)
 library(qss)
-
 ## load data
 resume <- read_csv("data/resume.csv")
-
 # check data 
 resume
+```
+
+## Today's Goal
+### Combine functions to get informative output
+\small
+```{r warning=FALSE, message=FALSE}
+racial_gaps_by_sex <- resume %>%
+  group_by(race, sex) %>% 
+    # using two variables to group the data 
+  summarize(callback = mean(call)) %>% 
+    # the callback rate for each group 
+  pivot_wider(names_from = race, 
+                # reshaping the data
+              values_from = callback) %>%
+  mutate(race_gap = white - black)
+```
+\large
+
+```{r echo=FALSE}
+kable(racial_gaps_by_sex)
+```
+
+## Tools
+```{r fig.show="hold", out.width="40%", fig.align='center',echo=FALSE}
+ggdraw() + 
+  draw_image("figure/tidyr_logo.png") 
+ggdraw() + 
+  draw_image("figure/dplyr_logo.png") 
 ```
 
 ## `dplyr` from `Tidyverse`
@@ -76,14 +94,12 @@ resume_sex_race
 
 - `filter`: Return rows by name/number/etc.
 
-```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
+```{r}
 ## subset data with black names
 resumeB <- resume %>% 
   filter(race == "black")
 resumeB
 ```
-*Source: [RStudio](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf)*
-
 
 ## Combining Functions
 
@@ -96,37 +112,13 @@ resumeWm_without_firstname <- resume %>%
 resumeWm_without_firstname
 ```
 
-
-# Summarize Data
-## `summarise()`
-\tiny
-```{r}
-## callback rate for black female names
-Bf_callback <- resume %>% 
-  filter(race == "black" & sex =="female") %>%
-  summarize(callback_rate = mean(call, na.rm = TRUE))
-
-Bf_callback
-
-## callback rate for white female names
-Wf_callback <- resume %>% 
-  filter(race == "white" & sex == "female") %>%
-  summarize(callback_rate = mean(call, na.rm = TRUE))
-
-Wf_callback
-
-## difference between white and black women
-Wf_callback - Bf_callback
-```
-
 # Add New Variable
-## `mutate()`
-\tiny
+## Compute New Columns (`mutate`)
 
-### calculate target values
-The way we did previously with `filter()` and `summarise()`. 
+- `mutate`
+- `case_when`
 
-### create factor variable with `mutate`
+\scriptsize
 ```{r}
 ## create a factor variable that takes one of the four values
 resume <- resume %>%
@@ -135,11 +127,58 @@ resume <- resume %>%
                           race == "white" & sex == "female" ~ "WhiteFemale",
                           race == "white" & sex == "male" ~ "WhiteMale",
                           TRUE ~ "Other"))
+resume
+```
 
-head(resume)
+# Summarize Data
+## Compute Table Summaries (`summarise`)
+
+\scriptsize
+
+```{r}
+## callback rate for black female names
+Bf_callback <- resume %>% 
+  filter(race == "black" & sex =="female") %>%
+  summarize(callback_rate = mean(call, na.rm = TRUE))
+Bf_callback
+```
+\tiny
+```{r}
+## callback rate for white female names
+Wf_callback <- resume %>% 
+  filter(race == "white" & sex == "female") %>%
+  summarize(callback_rate = mean(call, na.rm = TRUE))
+Wf_callback
+```
+\scriptsize
+```{r}
+## difference between white and black women
+Wf_callback - Bf_callback
 ```
 
 # Summary
+
+## Overwhelmed? 
+### Don't worry!
+There are many resources you can use, and you don't have to memorize all the functions.
+
+- QSS Textbook
+  + Tidyverse Version is on `Perrusal`
+- Cheetsheets
+  + Search "`tidyverse cheetsheets`"
+  + https://www.rstudio.com/resources/cheatsheets/
+- Online Resources 
+  + Google " `tidyverse add column error` "
+  + official reference page, stackoverflow, RPubs, etc. 
+
+## But more importantly...
+
+### Teaching Team
+We are here for you!
+
+- During / after the in-class exercises
+- Office hours 
+- Perussal 
 
 ## Let's practice!
 ```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
