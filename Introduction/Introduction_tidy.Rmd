@@ -20,10 +20,10 @@ library(knitr)
 library(cowplot)
 ```
 
-# What is `Tidyverse`?
+# What is `R` and `tidyverse`?
 
 ## What is `R`?
-A program language!
+A programing language!
 ```{r fig.show="hold", out.width="80%", fig.align='center'}
 ggdraw() + 
   draw_image("figure/R_as_a_language.png") 
@@ -31,7 +31,7 @@ ggdraw() +
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
 \newpage
-## Then, what is `Tidyverse`?
+## Then, what is `tidyverse`?
 ```{r fig.show = "hold", out.width = "30%", fig.align = 'center'}
 ggdraw() + 
   draw_image("figure/tidyverse_logo.png") 
@@ -41,58 +41,50 @@ ggdraw() +
 >- Data import, tidying, manipulation, visualization, programming
 
 \newpage
-## Then, what is `Tidyverse`?
-```{r fig.show = "hold", out.width = "70%", fig.align = 'center'}
+## Then, what is `tidyverse`?
+```{r fig.show = "hold", out.width = "80%", fig.align = 'center'}
 ggdraw() + 
   draw_image("figure/packages.png") 
 ```
-- A collection of R packages 
-- Support natural workflow of data analysis
-- Data import, tidying, manipulation, visualization, programming
+*Source: [Slyvia Canelon](https://github.com/spcanelon/tour-of-the-tidyverse/blob/master/images/pptx/tidyverse.png)*
 
 \newpage
 
+# Differences between Base R and tidyverse
 ## Load tidyverse
 ```{r, eval = FALSE, echo = TRUE}
 #install.packages(tidyverse)
 library("tidyverse")
 ```
 
-# Base R versus tidyverse syntax
 ## Example
-
 ```{r echo = TRUE}
 UNpop <- read.csv("data/UNpop.csv")
 UNpop
 ```
 
-Let's calculate the \% of increase from 1950!
+Let's calculate the \% of population increase from 1950!
 
 \newpage
 
 ## Base R syntax
 ```{r echo = TRUE}
-UNpop_base <- UNpop
-# calculate the ratio compared to 1950
-UNpop_base$vs_1950 <- 
-  UNpop_base$world.pop / UNpop_base$world.pop[1] 
-# convert to percentage increase and round
-UNpop_base$percent_increase <- 
-  round((UNpop_base$vs_1950 - 1) * 100, 1)
-UNpop_base
+## calculate the ratio compared to 1950
+UNpop$ratio <- UNpop$world.pop / UNpop$world.pop[1] 
+
+## convert to percentage increase and round
+UNpop$percent <- round((UNpop$ratio - 1) * 100, 1)
 ```
 
 \newpage
 
 ## tidyverse syntax
 ```{r, echo = TRUE}
-UNpop_tidy <- UNpop %>% 
-          # calculate the ratio compared to 1950
-  mutate(vs_1950 = world.pop / first(world.pop),
-          # convert to percentage increase and round
-         percent_increase = round(100 * (vs_1950 - 1), 1)
-         ) 
-UNpop_tidy
+UNpop %>% 
+  # calculate the ratio compared to 1950
+  mutate(ratio = world.pop / first(world.pop), 
+  # convert to percentage increase and round
+  percent = round((ratio - 1) * 100, 1)) 
 ```
 
 \newpage
@@ -100,32 +92,33 @@ UNpop_tidy
 ## Same task, with different syntax
 ### `Base-R`
 ```{r eval = FALSE, echo = TRUE}
-UNpop_base$vs_1950 <- 
-  UNpop_base$world.pop / UNpop_base$world.pop[1] 
-UNpop_base$percent_increase <- 
-  round((UNpop_base$vs_1950 - 1) * 100, 1)
+UNpop$ratio <- UNpop$world.pop / UNpop$world.pop[1] 
+UNpop$percent <- round((UNpop$ratio - 1) * 100, 1)
 ```
 
-### `Tidyverse`
+### `tidyverse`
 ```{r eval = FALSE, echo = TRUE}
-UNpop_tidy <- UNpop %>% 
-  mutate(vs_1950 = world.pop / first(world.pop),
-         percent_increase = round(100 * (vs_1950 - 1), 1)) 
+UNpop %>% 
+  mutate(ratio = world.pop / first(world.pop),
+         percent = round((ratio - 1) * 100, 1)) 
 ```
 
 \newpage
 
 # Summary
 ## Summary
-### Differences between Base R/tidyverse?
-- Base R: Lots of **$** and **[[]]**
+### How to distinct between base R/tidyverse?
+- Base R: Lots of **$** and **[[ ]]**
 - Tidyverse: **%>%** (Forward pipe operator)
 
-```{r fig.show = "hold", out.width = "50%", fig.align = 'center'}
+### Why tidyverse?
+>- Resemble human language 
+>- Intuitive and logical 
+>- Combination of both base R and tidyverse
+
+```{r fig.show = "hold", out.width = "40%", fig.align = 'center'}
 ggdraw() + 
   draw_image("figure/pipe.png") 
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
-### When to use Base R/tidyverse?
-- Combination of both
