@@ -1,0 +1,111 @@
+---
+title: "Chapter 2: Causality"
+subtitle: "Inclass Hand's on Tutorials"
+author: "Sho Miyazaki"
+institute: "Keio University"
+date: "5/26/2022"
+
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, message=FALSE}
+## load packages
+library(tidyverse)
+library(qss)
+```
+
+```{r}
+## load data
+resume <- read_csv("data/resume.csv")
+# check data 
+resume
+```
+
+## Extract Rows (`filter`)
+
+```{r}
+## subset data with black names
+resume %>% 
+  filter(race == "black")
+```
+
+## Extract Columns (`select`) 
+
+```{r}
+## Subset with sex and race columns
+resume %>% 
+  select(sex, race)
+```
+
+## Compute New Columns (`mutate`)
+
+```{r}
+## create a factor variable that takes one of the four values
+resume %>%
+  mutate(type = case_when(race == "black" & sex == "female" ~ "BlackFemale",
+                          race == "black" & sex == "male" ~ "BlackMale",
+                          race == "white" & sex == "female" ~ "WhiteFemale",
+                          race == "white" & sex == "male" ~ "WhiteMale",
+                          TRUE ~ "Other"))
+```
+
+## Compute Table Summaries (`summarise`)
+
+```{r}
+## callback rate for black female names
+Bf_callback <- resume %>% 
+  filter(race == "black" & sex =="female") %>%
+  summarize(callback_rate = mean(call, na.rm = TRUE))
+Bf_callback
+```
+
+```{r}
+## callback rate for white female names
+Wf_callback <- resume %>% 
+  filter(race == "white" & sex == "female") %>%
+  summarize(callback_rate = mean(call, na.rm = TRUE))
+Wf_callback
+```
+```{r}
+## difference between white and black women
+Wf_callback - Bf_callback
+```
+
+## Combining Functions
+
+```{r}
+## subset data with white, male-sounding names
+## Then, let's remove the first name
+resumeWm_without_firstname <- resume %>% 
+  filter(race == "white" & sex == "male") %>% 
+  select(!firstname)
+resumeWm_without_firstname
+```
+
+# Codes in Slide
+
+```{r}
+by_race_sex <- group_by(resume, race, sex)
+resume <- summarize(by_race_sex,
+                    count = n(),
+                    call_back = mean(call, na.rm = TRUE))
+resume <- pivot_wider(resume, 
+                      names_from = race, 
+                      values_from = call_back)
+resume <- mutate(resume, race_gap = white - black)
+```
+
+```{r}
+resume %>%
+  group_by(race, sex) %>% 
+  summarize(callback = mean(call)) %>% 
+  pivot_wider(names_from = race, 
+              values_from = callback) %>%
+  mutate(race_gap = white - black)
+```
+
+  

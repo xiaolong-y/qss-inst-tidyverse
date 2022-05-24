@@ -19,7 +19,7 @@ library(knitr)
 library(cowplot)
 ```
 
-# Overview
+# Introduction
 
 ## Data Transformation
 
@@ -77,18 +77,27 @@ ggdraw() +
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
-# Subset Data
+# `dplyr` and `%>%`
 
-## Extract Columns (`select`) 
+## What is "`pipe %>% `" ?
 
-- `select`: Return columns by name/number/etc.
-```{r}
-## Subset with sex and race columns
-resume_sex_race <- resume %>% 
-  select(sex, race)
-resume_sex_race
+```{r fig.show="hold", out.width="25%", fig.align='center', echo=FALSE}
+ggdraw() + 
+  draw_image("figure/pipe.png") 
 ```
 
+-  **`x %>% f(y)`** turns into **f(x, y)**
+- "a good way to pronounce %>% when reading code is “**then**”."
+
+```{r fig.show="hold", out.width="48%", fig.align='center',echo=FALSE}
+ggdraw() + 
+  draw_image("figure/tidy_code.png") 
+ggdraw() + 
+  draw_image("figure/baser_code.png") 
+```
+
+\tiny
+*Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
 ## Extract Rows (`filter`)
 
@@ -101,18 +110,16 @@ resumeB <- resume %>%
 resumeB
 ```
 
-## Combining Functions
+## Extract Columns (`select`) 
 
+- `select`: Return columns by name/number/etc.
 ```{r}
-## subset data with white, male-sounding names
-## Then, let's remove the first name
-resumeWm_without_firstname <- resume %>% 
-  filter(race == "white" & sex == "male") %>% 
-  select(!firstname)
-resumeWm_without_firstname
+## Subset with sex and race columns
+resume_sex_race <- resume %>% 
+  select(sex, race)
+resume_sex_race
 ```
 
-# Add New Variable
 ## Compute New Columns (`mutate`)
 
 - `mutate`
@@ -130,7 +137,6 @@ resume <- resume %>%
 resume
 ```
 
-# Summarize Data
 ## Compute Table Summaries (`summarise`)
 
 \scriptsize
@@ -163,7 +169,7 @@ Wf_callback - Bf_callback
 There are many resources you can use, and you don't have to memorize all the functions.
 
 - QSS Textbook
-  + Tidyverse Version is on `Perrusal`
+  + Tidyverse Version is on `Perusall`
 - Cheetsheets
   + Search "`tidyverse cheetsheets`"
   + https://www.rstudio.com/resources/cheatsheets/
@@ -178,7 +184,7 @@ We are here for you!
 
 - During / after the in-class exercises
 - Office hours 
-- Perussal 
+- Perusall 
 
 ## Let's practice!
 ```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
