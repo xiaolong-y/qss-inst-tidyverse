@@ -37,6 +37,7 @@ ggdraw() +
   draw_image("figure/tidyverse_logo.png") 
 ```
 >- A collection of R packages 
+>- A dialect of the Base R programming language
 >- Support natural workflow of data analysis
 >- Data import, tidying, manipulation, visualization, programming
 
