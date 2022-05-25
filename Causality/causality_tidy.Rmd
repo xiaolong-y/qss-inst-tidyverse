@@ -22,6 +22,7 @@ library(cowplot)
 # Data Transformation
 
 ## Let's get started with Data
+Does racial discrimination exist in the labor market?
 \small
 ```{r warning=FALSE, message=FALSE}
 ## load packages
