@@ -95,6 +95,10 @@ resume %>%
   pivot_wider(names_from = race, 
               values_from = callback) %>%
   mutate(race_gap = white - black)
+
+
+
+
 ```
 
   
