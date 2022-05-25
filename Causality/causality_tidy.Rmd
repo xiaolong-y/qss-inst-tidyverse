@@ -19,7 +19,7 @@ library(knitr)
 library(cowplot)
 ```
 
-# Introduction
+# Data Transformation
 
 ## Let's get started with Data
 \small
@@ -69,7 +69,7 @@ ggdraw() +
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
-# `dplyr` and `%>%`
+# Functions
 
 ## What is "`pipe %>% `" ?
 
