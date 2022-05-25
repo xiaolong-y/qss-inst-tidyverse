@@ -1,6 +1,6 @@
 ---
 title: "Chapter 2: Causality"
-subtitle: "Data Transformation with Tidyverse Functions"
+subtitle: "Data Transformation with Tidyverse"
 author: "Sho Miyazaki"
 institute: "Keio University"
 date: "5/26/2022"
@@ -20,14 +20,6 @@ library(cowplot)
 ```
 
 # Introduction
-
-## Data Transformation
-
-```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
-ggdraw() + 
-  draw_image("figure/data-science-explore.png") 
-```
-*Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
 ## Let's get started with Data
 \small
@@ -86,7 +78,6 @@ ggdraw() +
   draw_image("figure/pipe.png") 
 ```
 
--  **`x %>% f(y)`** turns into **f(x, y)**
 - "a good way to pronounce %>% when reading code is “**then**”."
 
 ```{r fig.show="hold", out.width="48%", fig.align='center',echo=FALSE}
@@ -105,9 +96,8 @@ ggdraw() +
 
 ```{r}
 ## subset data with black names
-resumeB <- resume %>% 
+resume %>% 
   filter(race == "black")
-resumeB
 ```
 
 ## Extract Columns (`select`) 
@@ -115,51 +105,32 @@ resumeB
 - `select`: Return columns by name/number/etc.
 ```{r}
 ## Subset with sex and race columns
-resume_sex_race <- resume %>% 
+resume %>% 
   select(sex, race)
-resume_sex_race
 ```
 
 ## Compute New Columns (`mutate`)
 
 - `mutate`
-- `case_when`
 
 \scriptsize
 ```{r}
 ## create a factor variable that takes one of the four values
-resume <- resume %>%
+resume %>%
   mutate(type = case_when(race == "black" & sex == "female" ~ "BlackFemale",
                           race == "black" & sex == "male" ~ "BlackMale",
                           race == "white" & sex == "female" ~ "WhiteFemale",
                           race == "white" & sex == "male" ~ "WhiteMale",
                           TRUE ~ "Other"))
-resume
 ```
 
 ## Compute Table Summaries (`summarise`)
 
-\scriptsize
-
 ```{r}
 ## callback rate for black female names
-Bf_callback <- resume %>% 
+resume %>% 
   filter(race == "black" & sex =="female") %>%
   summarize(callback_rate = mean(call, na.rm = TRUE))
-Bf_callback
-```
-\tiny
-```{r}
-## callback rate for white female names
-Wf_callback <- resume %>% 
-  filter(race == "white" & sex == "female") %>%
-  summarize(callback_rate = mean(call, na.rm = TRUE))
-Wf_callback
-```
-\scriptsize
-```{r}
-## difference between white and black women
-Wf_callback - Bf_callback
 ```
 
 # Summary
@@ -174,17 +145,11 @@ There are many resources you can use, and you don't have to memorize all the fun
   + Search "`tidyverse cheetsheets`"
   + https://www.rstudio.com/resources/cheatsheets/
 - Online Resources 
-  + Google " `tidyverse add column error` "
+  + Google "`tidyverse add column error`"
   + official reference page, stackoverflow, RPubs, etc. 
-
-## But more importantly...
 
 ### Teaching Team
 We are here for you!
-
-- During / after the in-class exercises
-- Office hours 
-- Perusall 
 
 ## Let's practice!
 ```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}

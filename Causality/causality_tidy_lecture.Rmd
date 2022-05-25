@@ -25,6 +25,8 @@ resume <- read_csv("data/resume.csv")
 resume
 ```
 
+
+
 ## Extract Rows (`filter`)
 
 ```{r}
@@ -33,7 +35,7 @@ resume %>%
   filter(race == "black")
 ```
 
-## Extract Columns (`select`) 
+## Extract Columns (`selet`) 
 
 ```{r}
 ## Subset with sex and race columns
@@ -57,34 +59,21 @@ resume %>%
 
 ```{r}
 ## callback rate for black female names
-Bf_callback <- resume %>% 
+resume %>% 
   filter(race == "black" & sex =="female") %>%
   summarize(callback_rate = mean(call, na.rm = TRUE))
-Bf_callback
 ```
 
-```{r}
-## callback rate for white female names
-Wf_callback <- resume %>% 
-  filter(race == "white" & sex == "female") %>%
-  summarize(callback_rate = mean(call, na.rm = TRUE))
-Wf_callback
-```
-```{r}
-## difference between white and black women
-Wf_callback - Bf_callback
-```
 
-## Combining Functions
 
-```{r}
-## subset data with white, male-sounding names
-## Then, let's remove the first name
-resumeWm_without_firstname <- resume %>% 
-  filter(race == "white" & sex == "male") %>% 
-  select(!firstname)
-resumeWm_without_firstname
-```
+
+
+
+
+
+
+
+
 
 # Codes in Slide
 
