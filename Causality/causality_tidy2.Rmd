@@ -1,0 +1,68 @@
+---
+title: 'Chapter 2: Causality'
+author: "Claire Liow"
+date: "5/31/2022"
+output:
+  beamer_presentation:
+    slide_level: 2
+    toc: yes
+    theme: Madrid
+    colortheme: beaver
+  pdf_document:
+    toc: yes
+subtitle: Data Transformation with Tidyverse Functions
+institute: University of Tokyo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+## load packages
+library(tidyverse)
+library(qss)
+## load data
+resume <- read_csv("data/resume.csv")
+# check data 
+resume
+```
+
+# Aggregate data with `group_by`
+```{r, eval = FALSE, echo = TRUE}
+## count the observation in each subset
+race.call.summary <- resume %>%
+  group_by(race, call) %>% 
+  count()
+
+## calculate callback rates by race
+callback_by_race <- resume %>%
+  group_by(race, sex) %>%
+  summarize(callback_rate = mean(call)) 
+``` 
+
+# Summarize data with `summarize`
+```{r, eval = FALSE, echo = TRUE}
+resume %>%
+group_by(race, sex) %>%
+summarize(callback = mean(call))
+
+resume %>%
+  group_by(firstname) %>%
+  summarize(callback = mean(call))
+```
+
+# Reshape the data with `pivot_wider`
+```{r, eval = FALSE, echo = TRUE}
+## tidyverse
+## without pivoting the data
+resume %>%
+group_by(race, sex) %>%
+summarize(callback = mean(call))
+
+## after pivoting the data
+resume %>%
+group_by(race, sex) %>%
+summarize(callback = mean(call)) %>%
+pivot_wider(names_from = race, values_from = callback)
+```
+
+
+
