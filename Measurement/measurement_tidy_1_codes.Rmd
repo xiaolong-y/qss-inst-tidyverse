@@ -5,3 +5,116 @@ date: "6/2/2022"
 output: html_document
 ---
 
+```{r include = FALSE}
+library(tidyverse)
+data(afghan, package = "qss")
+```
+
+# Handling missing data
+
+## Reordering rows with `arrange()`
+
+```{r}
+afghan_age <- select(afghan, province, district, age)
+head(arrange(afghan_age, age))
+head(arrange(afghan_age, desc(age)))
+```
+
+
+## Remove observations with NAs with `drop_na()`
+```{r}
+num <- tibble(c(2, 4, 3, NA, 7), c(5, NA, 9, 8, 6))
+
+num
+drop_na(num)
+```
+Be sure to check in advance how many NAs the data frame contains!
+
+
+
+# Data visualization
+
+```{r include = FALSE}
+library(gridExtra)
+data("congress", package = "qss")
+```
+
+
+## Basic syntax (scatterplot)
+````{r}
+ggplot(data = abc) + 
+  geom_point(aes(x = xxx, y = yyy))
+```
+
+
+## A simple scatterplot
+````{r}
+# create a dataset of the 80th congress
+mydata <- filter(congress, congress == 80)
+
+# plot the DW-nominate scores
+ggplot(data = mydata) + 
+  geom_point(aes(x = dwnom1,  ## dwnom1 = economic liberalism/conservatism
+                 y = dwnom2)) ## dwnom2 = racial liberalism/conservatism
+
+```
+
+Below, I will add different components to this scatterplot!
+
+
+## how to combinate multiple plots
+```{r}
+ggplot(data = mydata) + 
+  geom_point(aes(x = dwnom1, y = dwnom2)) +
+  geom_vline(xintercept = 0, # add a vertical line
+             color = "pink", linetype = "dashed") + # specify color and linetype
+  geom_hline(yintercept = 0, # add a horizontal line
+             color = "orange", linetype = "dashed") # specify color and linetype
+```
+
+
+## how to add colors
+```{r}
+ggplot(data = mydata) + 
+  geom_point(aes(x = dwnom1, y = dwnom2,
+                 shape = party, color = party)) +  
+  scale_color_manual(values = c(Democrat = "blue",
+                                 Republican = "red",
+                                 Other = "green")) +
+  scale_shape_manual(values = c(Democrat = "square",
+                                 Republican = "triangle",
+                                 Other = "circle")) 
+```
+
+
+## how to add labels
+```{r}
+ggplot(data = mydata) + 
+  geom_point(aes(x = dwnom1, y = dwnom2)) +
+  scale_y_continuous("Racial liberalism/conservatism", limits = c(-1.5, 1.5)) +
+  scale_x_continuous("Economic\n liberalism/conservatism", limits = c(-1.5, 1.5)) +
+  coord_fixed()
+```
+
+## Let's put everything together!
+```{r}
+ggplot(data = mydata) + 
+  geom_point(aes(x = dwnom1, y = dwnom2,
+                 shape = party, color = party)) +  
+  geom_vline(xintercept = 0, # add a vertical line
+             color = "pink", linetype = "dashed") + 
+  geom_hline(yintercept = 0, # add a horizontal line
+             color = "orange", linetype = "dashed") + 
+  scale_color_manual(values = c(Democrat = "blue", # specify the color
+                                 Republican = "red",
+                                 Other = "green")) +
+  scale_shape_manual(values = c(Democrat = "square", # specify the shape
+                                 Republican = "triangle",
+                                 Other = "circle"))  +
+  scale_y_continuous("Racial liberalism/conservatism", limits = c(-1.5, 1.5)) +
+  scale_x_continuous("Economic\n liberalism/conservatism", limits = c(-1.5, 1.5)) +
+  coord_fixed()
+```
+
+
+
