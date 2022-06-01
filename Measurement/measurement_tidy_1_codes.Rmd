@@ -13,18 +13,22 @@ data(afghan, package = "qss")
 # Handling missing data
 
 ## Reordering rows with `arrange()`
+reordering the rows from low to high (low to high with `desc()`)
 
 ```{r}
+# create a data set
 afghan_age <- afghan %>%
   select(province, district, age)
+
+# reorder rows
 arrange(afghan_age, age)
 arrange(afghan_age, desc(age))
 ```
 
 
 ## Remove observations with NAs with `drop_na()`
-
-Be sure to check in advance how many NAs the data frame contains!
+Remove all observations with at least one missing value from a data frame.
+**Be sure to check in advance how many NAs the data frame contains!**
 
 ```{r}
 # check how many NAs will be omitted!
@@ -118,16 +122,16 @@ ggplot(data = mydata) +
 ggplot(data = mydata) +
   geom_point(aes(x = dwnom1, y = dwnom2,
                  shape = party, color = party)) +
-  geom_vline(xintercept = 0, # add a vertical line
-             color = "pink", linetype = "dashed") + 
-  geom_hline(yintercept = 0, # add a horizontal line
-             color = "orange", linetype = "dashed") + 
   scale_color_manual(values = c(Democrat = "blue", # specify the color
                                  Republican = "red",
                                  Other = "green")) +
   scale_shape_manual(values = c(Democrat = "square", # specify the shape
                                  Republican = "triangle",
-                                 Other = "circle"))  +
+                                 Other = "circle")) +
+  geom_vline(xintercept = 0, # add a vertical line
+              color = "pink", linetype = "dashed") +
+  geom_hline(yintercept = 0, # add a horizontal line
+              color = "orange", linetype = "dashed") +
   scale_y_continuous("Racial liberalism/conservatism", limits = c(-1.5, 1.5)) +
   scale_x_continuous("Economic\n liberalism/conservatism", limits = c(-1.5, 1.5)) +
   coord_fixed()
