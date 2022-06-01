@@ -52,6 +52,9 @@ afghan %>%
 
 ```{r include = FALSE}
 data("congress", package = "qss")
+
+# create a dataset of the 80th congress
+mydata <- filter(congress, congress == 80)
 ```
 
 
@@ -64,9 +67,6 @@ ggplot(data = abc) +
 
 ## A simple scatterplot
 ````{r}
-# create a dataset of the 80th congress
-mydata <- filter(congress, congress == 80)
-
 # plot the DW-nominate scores
 ggplot(data = mydata) + 
   geom_point(aes(x = dwnom1,  ## dwnom1 = economic liberalism/conservatism
