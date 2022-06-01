@@ -15,27 +15,38 @@ data(afghan, package = "qss")
 ## Reordering rows with `arrange()`
 
 ```{r}
-afghan_age <- select(afghan, province, district, age)
-head(arrange(afghan_age, age))
-head(arrange(afghan_age, desc(age)))
+afghan_age <- afghan %>%
+  select(province, district, age)
+arrange(afghan_age, age)
+arrange(afghan_age, desc(age))
 ```
 
 
 ## Remove observations with NAs with `drop_na()`
-```{r}
-num <- tibble(c(2, 4, 3, NA, 7), c(5, NA, 9, 8, 6))
 
-num
-drop_na(num)
-```
 Be sure to check in advance how many NAs the data frame contains!
 
+```{r}
+# check how many NAs will be omitted!
+
+# original
+nrow(afghan) 
+
+# NAs omitted (without specifying columns)
+afghan %>%
+  drop_na() %>%
+  nrow()
+
+# NAs in income omitted
+afghan %>%
+  drop_na(income) %>%
+  nrow() 
+```
 
 
 # Data visualization
 
 ```{r include = FALSE}
-library(gridExtra)
 data("congress", package = "qss")
 ```
 
@@ -59,6 +70,12 @@ ggplot(data = mydata) +
 
 ```
 
+Compare it with the base R plot!
+```{r}
+plot(mydata$dwnom1, mydata$dwnom2,
+     pch = 20)
+```
+
 Below, I will add different components to this scatterplot!
 
 
@@ -73,7 +90,7 @@ ggplot(data = mydata) +
 ```
 
 
-## how to add colors
+## how to specify colors and shapes
 ```{r}
 ggplot(data = mydata) + 
   geom_point(aes(x = dwnom1, y = dwnom2,
@@ -98,9 +115,9 @@ ggplot(data = mydata) +
 
 ## Let's put everything together!
 ```{r}
-ggplot(data = mydata) + 
+ggplot(data = mydata) +
   geom_point(aes(x = dwnom1, y = dwnom2,
-                 shape = party, color = party)) +  
+                 shape = party, color = party)) +
   geom_vline(xintercept = 0, # add a vertical line
              color = "pink", linetype = "dashed") + 
   geom_hline(yintercept = 0, # add a horizontal line
