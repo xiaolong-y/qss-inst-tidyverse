@@ -16,25 +16,40 @@ data(afghan, package = "qss")
 
 # Measurement 1 (June 2)
 ## Table of Contents
-- Handling missing data
+
+- Handling (missing) data
 - Introduction to `ggplot2`
 - Today's in-class assignment: `gay-marriage-revisited`
 
 
-# Handling missing data
-## Handling missing data
-### `arrange()` for reordering data
-- Description: reordering the rows from low to high
-- Arguments: add `desc()` for reordering from high to low
+# Handling (missing) data
+## Handling (missing) data
 
-### `drop_na()` for listwise deletion
-- Description: remove all observations(rows) with at least one missing value from a data frame
-- Arguments: the name of data frame
-- Corresponding base R function: `na_omit()`
-- **Warning: check how many NAs are in the data frame before applying listwise deletion!**
+### `arrange()`: reordering data
+reordering the rows from low to high (low to high with `desc()`)
+\tiny
+```{r}
+afghan_age <- select(afghan, province, district, age)
+head(arrange(afghan_age, age))
+head(arrange(afghan_age, desc(age)))
+```
+
+## Handling (missing) data
+
+### `drop_na()`: listwise deletion (base R: `na_omit()`)
+Remove all observations with at least one missing value from a data frame.\
+```{r}
+num1 <- c(2, 4, 3, NA)
+num2 <- c(5, NA, 9, 8)
+num <- tibble(num1, num2)
+drop_na(num)
+```
 
 
 ## Example for `arrange()`
+
+\small
+
 ```{r}
 ## Table for non-missing values of ISAF and Taliban
 afghan %>%
@@ -46,9 +61,14 @@ afghan %>%
   arrange(prop) # compare to arrange(desc(prop))
 ```
 
+\normalsize
 
 ## Example for `drop_na()`
+
+\small
+
 ```{r}
+# check how many NAs will be omitted!
 nrow(afghan) # original
 afghan.sub.2 <- drop_na(afghan)
 nrow(afghan.sub.2) # NAs omitted
@@ -57,6 +77,7 @@ afghan %>%
   nrow() # NAs in income omitted
 ```
 
+\normalsize
 
 # Introduction to `ggplot2`
 ## Introduction to `ggplot2`
@@ -76,13 +97,13 @@ afghan %>%
 | ggplot(data = **DATA**) + 
 |   **GEOM_FUNCTION**(mapping = aes(**MAPPINGS**)) + 
 |   **ADDITIONAL_FUNCTIONS**
-|       * Add the components with `+`
+|       * Add the components with "`+`"
 
 ### Elements
 - **DATA**: specify the dataset to use in the graph
-- **GEOM_FUNCTION**: starting from`geom_`. specify the types of figures such as bar plot or histogram.
-- **MAPPINGS**: defines how variables in your dataset are mapped to visual properties. commonly used arguments are `x` and `y` to specify which variables to map to each axis.
-- **ADDITIONAL_FUNCTIONS**
+- **GEOM_FUNCTION**: starting from "`geom_`", where you specify the types of figures such as bar plot or histogram.
+- **MAPPINGS**: defines how variables in your dataset are mapped to visual properties. Commonly used arguments are `x` and `y` to specify which variables to map to each axis.
+- **ADDITIONAL_FUNCTIONS**: additional layers
 
 
 ## `ggplot2`: `GEOM_FUNCTION`
@@ -103,27 +124,28 @@ afghan %>%
 
 ## `ggplot2`: `aes(MAPPINGS)`
 ### Aesthetics
-- `x = variable`: value for x axis
-- `y = variable`: value for y axis
+- `x = variable`: values for x axis
+- `y = variable`: values for y axis
 - `color = variable`: assign unique color for each value of the variable
 - `fill = variable`: assign the unique color to fill in for each value
 - `size = variable`: assign unique size for each value of the variable
 - `alpha = variable`: control the level of transparency for each value
 - `shape = variable`: change the shape of points in `geom_point`
 - `position = `: `fill` for stacking, `dodge` for avoiding overlapping, `jitter` for solving overplotting\
-**All of those above should be within `aes()`**\
-If it goes outside of `aes()`, the above arguments will be applied to all the variables, regardless of the value, unless specified.
+
+### *All of those above should be within `aes()`
+- If it goes outside of `aes()`, the above arguments will be applied to all the variables, regardless of the value, unless specified.
 
 
 ## `ggplot2`: `ADDITIONAL_FUNCTIONS`
 ### Scales
 | Map the data values to visual values
-|  **`scale_!_!!`**, where
-|     **!**: aesthetic to adjust (x, y, fill, etc.)
-|     **!!**: prepackaged scale to use 
+|    **`scale_!_!!`**, where
+|         **!**: aesthetic to adjust (x, y, fill, etc.)
+|         **!!**: prepackaged scale to use 
 
-- `scale_x_discrete()`: set the discrete values for visualization
-- `scale_x_continuous()`: set the continuous values for visualization
+- `scale_x_discrete()`: set discrete values for visualization
+- `scale_x_continuous()`: set continuous values for visualization
 - `scale_fill_discrete()`: fill the plot with discrete values
 
 ### Labels
@@ -154,11 +176,14 @@ If it goes outside of `aes()`, the above arguments will be applied to all the va
 - `coord_fixed()`: fix the aspect ratio to square
 
 ## Example: Scatterplot
+
+\tiny
+
 ```{r include = FALSE}
 library(gridExtra)
 data("congress", package = "qss")
 ```
-```{r}
+```{r fig.show="hold", out.width="30%", fig.align='center'}
 ggplot(data = filter(congress, congress == 80),
        aes(x = dwnom1, y = dwnom2)) +
   geom_point(aes(shape = party, color = party),
@@ -169,11 +194,8 @@ ggplot(data = filter(congress, congress == 80),
   scale_shape_manual(values = c(Democrat = "square",
                                  Republican = "triangle",
                                  Other = "circle")) +
-  scale_y_continuous("Racial liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  scale_x_continuous("Economic\n liberalism/conservatism",
-                     limits = c(-1.5, 1.5)) +
-  ggtitle("80th Congress") +
+  scale_y_continuous("Racial liberalism/conservatism", limits = c(-1.5, 1.5)) +
+  scale_x_continuous("Economic\n liberalism/conservatism", limits = c(-1.5, 1.5)) +
   coord_fixed()
 ```
 - `scale_color_manual()`: specify which colors are used for which value
@@ -182,7 +204,8 @@ ggplot(data = filter(congress, congress == 80),
 - `coord_fixed()`: squared aspect ratio
 
 ## Example: Histogram (basic)
-```{r}
+\tiny
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(x = age)) + # the data and initial aes() 
   geom_histogram(aes(y = ..density..), # histogram, additional aes()
                  binwidth = 5, # how wide for each bin
@@ -198,7 +221,8 @@ ggplot(afghan, aes(x = age)) + # the data and initial aes()
 - `scale_x_continuous()`: change the ticks of x-axis
 
 ## Example: Histogram (advanced)
-```{r}
+\tiny
+```{r  fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   geom_histogram(binwidth = 1, center = 0) +
   geom_vline(xintercept = median(afghan$educ.years)) +
@@ -225,32 +249,22 @@ ggplot(afghan, aes(x = educ.years, y = ..density..)) +
 - first, load the package with `library(gridExtra)`
 - use the `grid_arrange()`
 
+
 ## Example: gridExtra
-```{r}
+\tiny
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 library(gridExtra)
 ## The age histogram
 age_hist <- ggplot(afghan, aes(x = age)) +
-  geom_histogram(aes(y = ..density..),
-binwidth = 5,
-                 boundary = 0) +
+  geom_histogram(aes(y = ..density..), binwidth = 5, boundary = 0) +
   scale_x_continuous(breaks = seq(20, 80, by = 10)) +
-  labs(title = "Distribution of \nrespondent's age",
-       y = "Age", x = "Density")
-```
-
-## Example: gridExtra
-```{r}
+  labs(title = "Distribution of \nrespondent's age", y = "Age", x = "Density")
 ## The education histogram
 educ_hist <- ggplot(afghan, aes(x = educ.years, y = ..density..)) +
   geom_histogram(binwidth = 1, center = 0) +
   geom_vline(xintercept = median(afghan$educ.years)) +
-  annotate(geom = "text", x = median(afghan$educ.years),
-           y = 0.4,
-           label = "median",
-           hjust = -0.1) +
-  labs(title = "Distribution of \nrespondent's education",
-       x = "Years of education",
-       y = "Density")
+  annotate(geom = "text", x = median(afghan$educ.years), y = 0.4, label = "median", hjust = -0.1) +
+  labs(title = "Distribution of \nrespondent's education", x = "Years of education", y = "Density")
 ## Put the plots side-by-side
 grid.arrange(age_hist, educ_hist, ncol = 2)
 ```
@@ -266,7 +280,10 @@ grid.arrange(age_hist, educ_hist, ncol = 2)
 
 # Review: `ggplot2`
 ## Example: Bar plot (basic)
-```{r}
+
+\tiny
+
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(data = afghan, # Tell R what data to use
     aes(x = as.factor(violent.exp.ISAF))) + # specify the x-axis 
   geom_bar(aes(y = ..prop.., # add a bar plot layer
@@ -281,6 +298,7 @@ ggplot(data = afghan, # Tell R what data to use
 - `scale_x_discrete()`: indicate which value to display in the x-axis
 
 ## Example: Bar plot (advanced)
+\tiny
 ```{r include = FALSE}
 afghan_reshape <- afghan %>%
   pivot_longer(violent.exp.ISAF:violent.exp.taliban,
@@ -288,7 +306,7 @@ afghan_reshape <- afghan %>%
                values_to = "harm")
 ```
 
-```{r}
+```{r fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(data = afghan_reshape,  
        aes(x = as.factor(harm))) +
 geom_bar(aes(y = ..prop.., 
@@ -306,14 +324,14 @@ geom_bar(aes(y = ..prop..,
 
 
 ## Example: Boxplot (basic)
-```{r}
+```{r  fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(y = age)) +
   geom_boxplot() +
   labs(y = "Age", x = "", title = "Distribution of Age")
 ```
 
 ## Example: Boxplot (advanced)
-```{r}
+```{r  fig.show="hold", out.width="50%", fig.align='center'}
 ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
   labs(y = "Year of Education", x = "Province", title = "Distribution of Age")
@@ -323,9 +341,8 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
 
 ## `tidymodels` package
 ### What is `tidymodels`?
-- a collection of packages for modeling and machine learning using tidyverse principles
-- the `tidy()` function here is contained in the`broom` package as well
+- "a collection of packages for modeling and machine learning using tidyverse principles" (official description of this package)
+- the `tidy()` function here is contained in the `broom` package as well
 
-### function `tidy()`
-- description: convert the output of a model into a tibble
-- argument: the output of an R model (such as `kmeans()`)
+### function `tidy()`: convert the output of a model into a tibble
+- takes the output of an R model (such as `kmeans()`) as an argument
