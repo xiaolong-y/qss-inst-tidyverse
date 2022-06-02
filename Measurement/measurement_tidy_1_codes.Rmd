@@ -10,7 +10,7 @@ library(tidyverse)
 data(afghan, package = "qss")
 ```
 
-# Handling missing data
+# Handling (missing) data
 
 ## Reordering rows with `arrange()`
 reordering the rows from low to high (low to high with `desc()`)
