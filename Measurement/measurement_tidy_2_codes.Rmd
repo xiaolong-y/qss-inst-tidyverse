@@ -1,0 +1,50 @@
+---
+title: "measurement_tidy2_codes"
+author: "Anna Yorozuya"
+date: "June 7, 2022"
+output: html_document
+---
+
+```{r include = FALSE}
+library(tidyverse)
+data(afghan, package = "qss")
+```
+
+
+# Review: `ggplot2`
+## Example: Bar plot
+
+\tiny
+```{r fig.show="hold", out.width="50%", fig.align='center'}
+ggplot(data = afghan, # Tell R what data to use
+    aes(x = as.factor(violent.exp.ISAF))) + # specify the x-axis 
+  geom_bar(aes(y = ..prop.., # add a bar plot layer
+           group = 1)) + 
+  scale_x_discrete(labels = c('No Harm','Harm','Nonresponse')) + 
+  ylab("Proportion of Respondents") + # Add a label to y-axis 
+  xlab("Response Category") + # Add a label to the x-axis 
+  ggtitle("Civilian Victimization by the ISAF") # Add a title
+```
+- `aes(y = ..prop..)`: the y-axis shows the proportion, not the count
+- `aes(group = 1)`: plot the proportion of the total
+- `scale_x_discrete()`: indicate which value to display in the x-axis
+
+
+
+## Example: Boxplot (basic)
+```{r  fig.show="hold", out.width="50%", fig.align='center'}
+ggplot(afghan, aes(y = age)) +
+  geom_boxplot() +
+  labs(y = "Age", x = "", title = "Distribution of Age")
+```
+
+## Example: Boxplot (advanced)
+```{r  fig.show="hold", out.width="50%", fig.align='center'}
+ggplot(afghan, aes(y = educ.years, x = province)) +
+  geom_boxplot() +
+  labs(y = "Year of Education", x = "Province", title = "Distribution of Age")
+```
+- `aes(x = province)`: create boxplot for each value of 
+
+
+## How to save a plot
