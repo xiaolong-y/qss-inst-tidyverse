@@ -7,6 +7,7 @@ output: html_document
 
 ```{r include = FALSE}
 library(tidyverse)
+library(gridExtra)
 data(afghan, package = "qss")
 ```
 
@@ -14,37 +15,63 @@ data(afghan, package = "qss")
 # Review: `ggplot2`
 ## Example: Bar plot
 
-\tiny
-```{r fig.show="hold", out.width="50%", fig.align='center'}
-ggplot(data = afghan, # Tell R what data to use
-    aes(x = as.factor(violent.exp.ISAF))) + # specify the x-axis 
-  geom_bar(aes(y = ..prop.., # add a bar plot layer
-           group = 1)) + 
-  scale_x_discrete(labels = c('No Harm','Harm','Nonresponse')) + 
+```{r}
+afghan_barplot <- 
+  ggplot(data = afghan, # Tell R what data to use
+         aes(x = as.factor(violent.exp.ISAF))) + # specify the x-axis 
+  geom_bar(aes(y = stat(prop), # add a bar plot layer
+           group = 1)) +
+  scale_x_discrete(labels = c("No Harm","Harm","Nonresponse")) + 
   ylab("Proportion of Respondents") + # Add a label to y-axis 
-  xlab("Response Category") + # Add a label to the x-axis 
-  ggtitle("Civilian Victimization by the ISAF") # Add a title
+  xlab("Response Category")  # Add a label to the x-axis 
+
+afghan_barplot
 ```
-- `aes(y = ..prop..)`: the y-axis shows the proportion, not the count
+- `aes(y = stat(prop))`: the y-axis shows the proportion, not the count
 - `aes(group = 1)`: plot the proportion of the total
 - `scale_x_discrete()`: indicate which value to display in the x-axis
 
 
+```{r}
+afghan_barplot <- afghan_barplot +
+  ggtitle("Civilian Victimization by the ISAF") # Add a title
 
-## Example: Boxplot (basic)
-```{r  fig.show="hold", out.width="50%", fig.align='center'}
-ggplot(afghan, aes(y = age)) +
+afghan_barplot
+```
+
+```{r}
+ggsave("~/Documents/QSS/2022/figures/afghan_barplot.pdf")
+```
+
+
+
+## Example: Boxplot (single)
+```{r}
+boxplot_single <-
+  ggplot(afghan, aes(y = age)) +
   geom_boxplot() +
   labs(y = "Age", x = "", title = "Distribution of Age")
+boxplot_single
 ```
 
-## Example: Boxplot (advanced)
-```{r  fig.show="hold", out.width="50%", fig.align='center'}
-ggplot(afghan, aes(y = educ.years, x = province)) +
+## Example: Boxplot (multiple)
+```{r}
+boxplot_multiple <- 
+  ggplot(afghan, aes(y = educ.years, x = province)) +
   geom_boxplot() +
   labs(y = "Year of Education", x = "Province", title = "Distribution of Age")
+boxplot_multiple
 ```
-- `aes(x = province)`: create boxplot for each value of 
+- `aes(x = province)`: create boxplot for each value of x
 
 
-## How to save a plot
+## How to save two plots in an object with `gridExtra`
+
+```{r}
+boxplots <- grid.arrange(boxplot_single, boxplot_multiple, ncol = 2) 
+boxplots
+ggsave("~/Documents/QSS/2022/figures/boxplots.pdf", boxplots)
+```
+
+
+
