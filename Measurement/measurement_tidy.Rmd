@@ -273,9 +273,22 @@ grid.arrange(age_hist, educ_hist, ncol = 2)
 
 # Measurement 2 (June 7)
 ## Table of Contents
+- How to save/print graphs
 - Review of `ggplot2`
 - `tidymodels` package
 - Today's in-class assignment: `political-efficacy`
+
+
+## How to save/print graphs
+### `ggsave`
+- `ggsave(path, filename, extension)`\
+- for example, if you want to save the figure as a pdf in the result_figures directory,\
+`ggsave("results_figures/education_by_province.pdf")`
+
+### `gridExtra`
+- save multiple plots into a single file
+- first, load the package with `library(gridExtra)`
+- use the `grid_arrange()`
 
 
 # Review: `ggplot2`
@@ -293,7 +306,7 @@ ggplot(data = afghan, # Tell R what data to use
   xlab("Response Category") + # Add a label to the x-axis 
   ggtitle("Civilian Victimization by the ISAF") # Add a title
 ```
-- `aes(y = ..prop..)`: the y-axis shows the proportion, not the count
+- `aes(y = stat(prop))`: the y-axis shows the proportion, not the count. this is equivalent to `aes(y = ..prop..)`
 - `aes(group = 1)`: plot the proportion of the total
 - `scale_x_discrete()`: indicate which value to display in the x-axis
 
