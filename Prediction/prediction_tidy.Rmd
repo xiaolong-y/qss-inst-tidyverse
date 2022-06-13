@@ -19,7 +19,7 @@ output:
 
 ## `stringr` package
 ### `stringr` package
-- a package in tidyverse for string manipulation
+- a package in tidyverse for manipulating strings
 - here we use the function `str_c()`
 - for more information, see [here](https://r4ds.had.co.nz/strings.html)
 
@@ -46,14 +46,19 @@ print(str_c(a, " times 3 is equal to ", b))
 - converting strings in the format of `year-month-date` into a `date` object
 - when subtracting a `date` object from another, the object will be a `difftime` object.
 
+## `lubridate` package - Example
 ```{r include = FALSE}
 library(lubridate)
 ```
 ```{r}
+# Converting an object into a date object
 x <- ymd("2008-11-04")
 y <- ymd("2008/9/1")
-subtraction <- x - y
 class(x)
+
+# When subtracting a date object from another, 
+# it will be a `difftime` object
+subtraction <- x - y
 class(subtraction)
 ```
 
@@ -69,8 +74,8 @@ class(subtraction)
 - `bind_rows(x, y)`: combine x and y by rows
 
 ### tidyverse function `mutate-joins`
-- `inner_join(x, y, by = ): includes all rows in x and y
-- `left_join (x, y, by = ): includes all rows in x
+- `inner_join(x, y, by = )`: includes all rows in x and y
+- `left_join (x, y, by = )`: includes all rows in x
 - `right_join (x, y, by = )`: includes all rows in y
 - `full_join (x, y, by = )`: includes all rows in x or y
 
@@ -212,7 +217,7 @@ women %>%
          "reserved" = `1` ) %>%
   mutate(diff = reserved - not_reserved)
 ```
-
+    
 
 ## visualizing regression 1: `geom_point()` + `geom_abline()`
 ```{r}
