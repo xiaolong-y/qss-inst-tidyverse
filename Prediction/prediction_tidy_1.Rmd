@@ -1,0 +1,80 @@
+---
+title: "Prediction 1 - tidyverse"
+author: "Anna Yorozuya"
+institute: "University of Tokyo"
+date: "June 14, 2022"
+output: 
+  beamer_presentation:
+    theme: "Madrid"
+    colortheme: "beaver"
+---
+
+## Table of Contents
+- `stringr` package
+- `lubridate` package
+- Combining objects
+- Today's in-class assignment: `betting-markets`
+
+
+## `stringr` package
+### `stringr` package
+- a package in tidyverse for manipulating strings
+- here we use the function `str_c()`
+- for more information, see [here](https://r4ds.had.co.nz/strings.html)
+
+### `str_c` function
+- combining multiple objects into a character string
+- each object will be separated by commas
+
+### Example
+```{r include = FALSE}
+library(tidyverse)
+```
+```{r}
+a <- 2
+b <- 6
+print(str_c(a, " times 3 is equal to ", b))
+```
+
+## `lubridate` package
+### `lubridate` package
+- a package in tidyverse for dates-times object
+- for more information, see [here](https://r4ds.had.co.nz/dates-and-times.html)
+
+### `ymd` function
+- converting strings in the format of `year-month-date` into a `date` object
+- when subtracting a `date` object from another, the object will be a `difftime` object.
+
+```{r include = FALSE}
+library(lubridate)
+```
+
+## `lubridate` package - Example
+```{r}
+# Converting an object into a date object
+x <- ymd("2008-11-04")
+y <- ymd("2008/9/1")
+class(x)
+
+# When subtracting a date object from another, 
+# it will be a `difftime` object
+subtraction <- x - y
+class(subtraction)
+```
+
+
+## Combining objects (data frame, vector, or matrix)
+### base R function
+- `cbind(x, y)`: combine x and y by columns
+- `rbind(x, y)`: combine x and y by rows
+- `merge(x, y, by = )`: merging two data frames by common columns or row names
+
+### tidyverse function `bind` (be careful!)
+- `bind_cols(x, y)`: combine x and y by columns
+- `bind_rows(x, y)`: combine x and y by rows
+
+### tidyverse function `mutate-joins`
+- `inner_join(x, y, by = )`: includes all rows in x and y
+- `left_join (x, y, by = )`: includes all rows in x
+- `right_join (x, y, by = )`: includes all rows in y
+- `full_join (x, y, by = )`: includes all rows in x or y
