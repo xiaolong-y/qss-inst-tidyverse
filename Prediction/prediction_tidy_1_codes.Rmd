@@ -1,0 +1,91 @@
+---
+title: "Prediction 1 - tidyverse"
+author: "Anna Yorozuya"
+date: "June 14, 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(stringr)
+library(lubridate)
+data("pres08", package = "qss")
+data("pres12", package = "qss")
+```
+
+
+## `stringr` package - `str_c` function
+
+- combining multiple objects into a character string
+- each object will be separated by commas
+
+```{r}
+a <- 2
+b <- 6
+print(str_c(a, " times 3 is equal to ", b))
+```
+
+```{r}
+data <- 1:4
+for (i in seq_along(data)) {
+    print(str_c("iteration", i))
+  }
+```
+
+
+## `lubridate` package - `ymd` function
+- converting strings in the format of `year-month-date` into a `date` object
+- when subtracting a `date` object from another, the object will be a `difftime` object.
+- the package has other commands, such as `mdy()` and `dmy()`
+
+```{r}
+# Converting an object into a date object
+x <- ymd("2008-11-04")
+y <- ymd("2008/9/1")
+class(x)
+
+# When subtracting a date object from another, 
+# it will be a `difftime` object
+(subtraction <- x - y)
+class(subtraction)
+```
+
+
+## Combining objects
+### tidyverse function `bind` (be careful!)
+- `bind_cols(x, y)`: combine x and y by columns
+- `bind_rows(x, y)`: combine x and y by rows
+
+```{r}
+# Combining two dataframes by columns
+pres_bind_cols <- bind_cols(pres08, pres12)
+
+# It looks good...?
+colnames(pres08)
+colnames(pres12)
+colnames(pres_bind_cols)
+
+# DC and Delware are in reverse order
+pres_bind_cols %>%
+  filter(state...2 != state...6)
+```
+
+
+### tidyverse function `mutate-joins` - better option!
+- `inner_join(x, y, by = ): includes all rows in x and y
+- `left_join (x, y, by = ): includes all rows in x
+- `right_join (x, y, by = )`: includes all rows in y
+- `full_join (x, y, by = )`: includes all rows in x or y
+
+```{r}
+## change the variable name for illustration
+pres12 <- rename(pres12, state.abbrev = state)
+
+## merging data sets using the variables of different names 
+## and specifying the suffix
+pres <- full_join(pres08, pres12,
+                  by = c("state" = "state.abbrev"),
+                  suffix = c("_08", "_12"))
+colnames(pres)
+```
+
