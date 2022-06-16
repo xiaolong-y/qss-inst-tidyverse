@@ -1,0 +1,74 @@
+---
+title: "Prediction 2 - tidyverse"
+author: "Anna Yorozuya"
+date: "June 16, 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidymodels)
+library(modelr)
+```
+
+## Let's visualize the `lm()` outputs!
+
+```{r}
+data("face", package = "qss")
+face <- mutate(face,
+                d.share = d.votes / (d.votes + r.votes),
+                r.share = r.votes / (d.votes + r.votes),
+                diff.share = d.share - r.share)
+face_fit <- lm(diff.share ~ d.comp, data = face)
+face_fit
+```
+
+```{r}
+data("florida", package = "qss")
+florida_fit <- lm(Buchanan00 ~ Perot96, data = florida)
+florida_fit
+```
+
+```{r}
+data("social", package = "qss")
+social_fit <- lm(primary2006 ~ messages, data = social)
+social_fit
+```
+
+
+## `broom` package
+
+`tidy()`: returns a data frame in which each row is a coefficient
+```{r}
+tidy(face_fit)
+```
+
+`glance()`: returns a one-row data frame summary of the model
+```{r}
+glance(face_fit)
+```
+
+- `augment()`: returns the original data with fitted values, residuals, and other observation level stats from the model appended to it.
+```{r}
+augment(face_fit) 
+```
+
+## `modelr` package
+
+- `add_predictions()`: add the predictions to the original data
+- `add_residuals()`: add the residuals to the original data
+```{r}
+florida_model <- florida %>%
+  add_predictions(florida_fit) %>%
+  add_residuals(florida_fit)
+head(florida_model)
+```
+
+- `data_grid()`: create a data set containing every unique combination of the specified columns from the old data set.
+```{r}
+unique_messages <- social %>%
+  data_grid(messages) %>%
+  add_predictions(social_fit)
+unique_messages
+```
+
