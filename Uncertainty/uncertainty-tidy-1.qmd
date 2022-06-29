@@ -1,0 +1,420 @@
+---
+title: "Uncertainty - Tidyverse 1"
+subtitle: R data types and code style
+author: "Introduction to Quantitative Social Science"
+institute: 
+  - "Xiaolong Yang"
+  - "University of Tokyo"
+date: "June 30, 2022"
+navigation: frame
+format: 
+  beamer: 
+    navigation: horizontal
+    theme: "Madrid"
+    colortheme: "beaver"
+    incremental: false
+    default-image-extension: tex
+    slide-level: 2
+---
+
+```{r include = FALSE}
+library(tidyverse)
+data(FLVoters, package = "qss")
+```
+
+## Today's Game Plan
+
+1. data types: **vector**
+2. code style
+3. new functions in **Chapter 7: Uncertainty**
+  - `geom_pointrange()` 
+  - `facet_grid()` 
+
+:::{.callout-note appearance="simple"}
+Today's in-class assignment: `china-women`
+::: 
+
+
+# Data types
+
+## Visualizing Vectors: *2 types of vector in R*
+
+![The hierarchy of R’s vector types; source: R4DS](~/Desktop/vector.png){width=50%}
+
+## Vectors: *2 types of vector in R*
+
+::::  {.columns align=center totalwidth=8em}
+
+::: {.column width="50%"}
+**Atomic Vector**
+
+- Types
+  - logical (TRUE/FALSE)
+  - numeric (integer, double)
+  - character
+- **Homogeneous**: stores only one type of data
+- `typeof()` and `length()`
+```{r}
+#| eval: true
+#| echo: true 
+
+x <- c(TRUE, TRUE, FALSE)
+
+typeof(x)
+length(x)
+```
+
+:::
+
+::: {.column width="50%"}
+**List**
+
+- **Heterogeneous**: stores different types of data
+
+
+```{r}
+#| eval: true
+#| echo: true 
+
+x <- list(1, 
+          c(2, 3),
+          "QSS",
+          list(4, 5))
+          
+str(x)
+```
+:::
+
+::::
+
+## Visualizing Vectors: *2 types of vector in R*
+
+![The hierarchy of Atomic vector; source: Advanced R](~/Desktop/atomic.png){width=100%}
+
+## Visualizing lists
+
+![Visualization of a list; source: Advanced R](~/Desktop/list.png){width=100%}
+
+## Test functions
+
+- `in_logical()`
+- `is_integer()`
+- `is_double()`
+- `is_numeric()`
+- `is_character()`
+- `is_atomic()`
+- `is_list()`
+- `is_list()`
+
+:::{.callout-tip appearance="simple"}
+Good additional resources on R data types by Jenny Bryan [**Vectors and lists**](https://jennybc.github.io/purrr-tutorial/bk00_vectors-and-lists.html) and
+[**R objects and indexing**](https://stat545.com/r-objects.html)
+::: 
+
+## Data frames/tibbles
+
+![Visualization of data.frame and tibble as lists; source: Advanced R](~/Desktop/tibble.png){width=100%}
+
+## Data frames/tibbles
+
+A data frame is a **named list**, but all the elements have the same length 
+
+- elements in the list `=` columns 
+- every column has the same length (number of observations)
+- `nth` row `=` `nth` items from each vector (nth observations)
+
+
+```{r}
+#| eval: true
+#| echo: true 
+
+class(FLVoters)
+typeof(FLVoters)
+length(FLVoters)
+```
+
+---
+
+![View FLVoters in RStudio](~/Desktop/FLVoters.png){width=80%}
+
+## `purrr` `map()` function revisited
+
+::: {layout-ncol=2}
+![](~/Desktop/map1.png){width=80%}
+
+![Source: `purrr` cheatsheet](~/Desktop/map2.png){width=80%}
+:::
+
+## Short summary: data structure in R
+
+Vector as the most basic data type: workhorse of R
+
+- atomic vector
+  - **integer**, **double**, **character**, **logical** (raw, complex)
+  - **homogeneous**
+- list
+  - a data frame/tibble as a list of equal-length elements
+  - **heterogeneous**
+  
+  
+# Code style
+
+## Code style: syntax
+
+- object names: snake_case 
+ 
+```{r}
+#| eval: false
+#| echo: true 
+
+# Good
+day_one
+day_1
+
+# Bad
+DayOne
+dayone
+```
+
+## Code style: syntax
+- spacing: commas, parentheses
+
+ 
+```{r}
+#| eval: false
+#| echo: true 
+# Good
+x[, 1]
+mean(x, na.rm = TRUE)
+
+# Bad
+x[,1]
+x[ ,1]
+x[ , 1]
+mean (x, na.rm = TRUE)
+mean( x, na.rm = TRUE )
+```
+
+## Code style: syntax
+
+- infix operators (`==`, `+`, `-`, `<-`, etc.) 
+
+```{r}
+#| eval: false
+#| echo: true 
+# Good
+height <- (feet * 12) + inches
+mean(x, na.rm = TRUE)
+
+# Bad
+height<-feet*12+inches
+mean(x, na.rm=TRUE)
+```
+
+## Code style: syntax
+
+- long lines: 80 characters per line
+  - use one line each for the function name, each argument, and the closing
+
+```{r}
+#| eval: false
+#| echo: true 
+# Good
+do_something_very_complicated(
+  something = "that",
+  requires = many,
+  arguments = "some of which may be long"
+)
+
+# Bad
+do_something_very_complicated("that", requires, many, arguments,
+                              "some of which may be long"
+                              )
+```
+
+## Code style: syntax
+
+- assignment
+
+```{r}
+#| eval: false
+#| echo: true 
+# Good
+x <- 5
+
+# Bad
+x = 5
+```
+
+## Code style: syntax
+
+- logical vectors
+
+```{r}
+#| eval: false
+#| echo: true 
+# Good
+na.rm = TRUE
+na.rm = FALSE
+
+# Bad
+na.rm = T
+na.rm = F
+```
+
+## Code style: syntax
+
+- quotation marks
+
+```{r}
+#| eval: false
+#| echo: true 
+# Good
+"Text"
+'Text with "quotes"'
+
+# Bad
+'Text'
+'Text with "double" and \'single\' quotes'
+```
+
+## Code style: syntax
+
+
+- Comments: Each line of a comment begins with `#` and a single space
+
+```{r}
+#| eval: false
+#| echo: true 
+
+# regress y on x
+fit <- lm(y ~ x, data = df) # why lm()
+```
+
+
+## Code style guides
+
+:::{.callout-note}
+- [**Google’s R Style Guide**](https://google.github.io/styleguide/Rguide.html)
+- [**The Tidyverse Style Guide**](https://style.tidyverse.org/index.html)
+- [**Computer Programming: Pseudocode by Harvard CS50**](https://cs50.harvard.edu/ap/2020/assets/pdfs/pseudocode.pdf)
+::: 
+
+
+# New functions in **Chapter 7: Uncertainty**
+
+## `ggplot`: `geom_pointrange()`
+- draws points that shows a vertical interval defined by `x`, `ymin` and `ymax` 
+  - the 95% confidence intervals 
+
+```{r}
+#| eval: false
+#| echo: true 
+
+ggplot(poll_pred, aes(actual, Obama)) +
+  geom_abline(intercept = 0,
+              slope = 1) +
+  geom_pointrange(aes(ymin = ci_lower,
+                      ymax = ci_upr)) +
+  ...
+```
+
+## `ggplot`: `geom_pointrange()`
+- draws points that show a vertical interval defined by `x`, `ymin` and `ymax` 
+  - the 95% confidence intervals 
+![QSS Tidyverse version page 385](~/Desktop/ci.png){width=60%}
+
+## `ggplot`: `facet_grid()` 
+- Create separate panels for different class types defined by row and column faceting variables 
+- facet_grid(. ~ y)
+  - spreads `y` across columns $\rightarrow$ comparison of `y` positions
+
+```{r}
+#| eval: false
+#| echo: true 
+
+
+base <- FLVoters %>% 
+  na.omit() %>% 
+  ggplot(aes(age, VTD)) +
+  geom_point()
+
+base +
+  facet_grid(. ~ gender)
+```
+
+---
+
+```{r}
+#| eval: true
+#| echo: false 
+
+
+base <- FLVoters %>% 
+  na.omit() %>% 
+  ggplot(aes(age, VTD)) +
+  geom_point()
+
+base +
+  facet_grid(. ~ gender)
+```
+
+## `ggplot`: `facet_grid()` 
+- Create separate panels for different class types defined by row and column faceting variables 
+- facet_grid(x ~ .)
+  - spreads `x` across rows $\rightarrow$ comparison of `x` positions
+
+```{r}
+#| eval: false
+#| echo: true 
+
+base +
+  facet_grid(race ~ .)
+```
+
+---
+
+```{r}
+#| eval: true
+#| echo: false 
+
+
+base +
+  facet_grid(race ~ .)
+```
+
+## `ggplot`: `facet_grid()` 
+- Create separate panels for different class types defined by row and column faceting variables 
+- `facet_grid(x ~ y)`
+
+```{r}
+#| eval: false
+#| echo: true 
+
+base +
+  facet_grid(race ~ gender)
+```
+
+---
+
+```{r}
+#| eval: true
+#| echo: false 
+
+base +
+  facet_grid(race ~ gender)
+```
+
+
+## **What we learnt**
+
+- data types: **vector**
+- code style
+- new `ggplot` functions
+
+
+## Future Game Plan
+
+- reducing duplication: **iteration**
+- new functions in **chapter 7: Uncertainty (7.2, 7.3)**
+

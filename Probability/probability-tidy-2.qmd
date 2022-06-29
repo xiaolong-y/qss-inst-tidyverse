@@ -1,0 +1,368 @@
+---
+title: "Probability - Tidyverse 2"
+subtitle: Reducing duplication - writing functions and introducton to `purrr`
+author: "Introduction to Quantitative Social Science"
+institute: 
+  - "Xiaolong Yang"
+  - "University of Tokyo"
+date: "June 28, 2022"
+navigation: frame
+format: 
+  beamer: 
+    navigation: horizontal
+    theme: "Madrid"
+    colortheme: "beaver"
+    incremental: false
+thanks: "Sources: [R for Data Science](https://r4ds.hadley.nz/functions.html#functions-are-for-humans-and-computers); [Advanced R](https://adv-r.hadley.nz/fp.html) by Hadley Wickham"
+---
+
+```{r include = FALSE}
+library(tidyverse)
+library(purrr)
+data(FLVoters, package = "qss")
+```
+
+## Today's Game Plan
+
+1. reducing duplication: **functions** 
+2. `purrr` package
+  - `purrr`: `map_df()` (introduced in Chapter 6: Probability (sections 6.3-6.4))
+
+:::{.callout-note appearance="simple"}
+Today's in-class assignment: `intrade-prob`
+::: 
+
+# Functions
+
+## Landscape of Duplication Reduction in R
+
+```{mermaid}
+%%| fig-width: 3
+graph TD
+  A[Duplication Reduction] --> B(Functions)
+  A[Duplication Reduction] --> C(Iteration)
+  C --> D{Imperative Progrmming}
+  C --> E[functional programming]
+  D --> F[for loops]
+  D --> J[while loops]
+  E --> H[`purrr` package]
+```
+## Why writing functions?
+
+What does this code chunk do?
+
+```{r}
+#| echo: true 
+#| eval: false
+
+df$a <- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+## Why writing functions?
+
+::: {.incremental}
+- re-scaling each column to have a range from 0 - 1 
+- **But there is a mistake!!**
+  - **`df$b`: did not change `a` to `b`**
+:::
+
+```{r}
+#| echo: true 
+#| eval: false
+
+df$a <- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+## What if we have a function?
+
+```{r}
+#| echo: true 
+#| eval: false
+
+df$a <- rescale01(df$a)
+df$b <- rescale01(df$b)
+df$c <- rescale01(df$c)
+df$d <- rescale01(df$d)
+```
+
+## Advantages of functions over copy-paste
+
+1. easier to see the intent of your code: eyes on **difference** not **similarity**
+2. easier to respond to changes in requirements
+3. fewer bugs (i.e. updating a variable name in one place, but not in another).
+
+
+You should consider writing a function whenever you’ve copied and pasted a block of code more than twice (i.e. you now have three copies of the same code). 
+
+## 3 key steps to create a function 
+
+1. pick a name for the function
+
+```{r}
+#| echo: true 
+#| eval: false
+
+square
+```
+
+
+## 3 key steps to create a function 
+
+1. pick a name for the function
+2. list the inputs, or arguments, to the function inside function
+```{r}
+#| echo: true 
+#| eval: false
+
+square <- function(x) {} 
+```
+
+
+## 3 key steps to create a function 
+
+1. pick a name for the function
+2. list the inputs, or arguments, to the function inside function
+3. place the code you have developed in body of the function
+
+It’s easier to start with working code and turn it into a function; it’s harder to create a function and then try to make it work
+
+```{r}
+#| echo: true 
+#| eval: true
+
+square <- function(x) {
+  x^2
+} 
+
+square(13)
+```
+
+## Function arguments
+
+- `data` arguments: supplies the data to compute on
+- `details` arguments: supplies arguments that control the details of the computation
+- `lm()` as an example
+
+:::{.callout-tip appearance="simple"}
+`View()` allows you to check the source code of a function
+::: 
+
+```{r}
+#| eval: false
+#| echo: true 
+
+function (formula, data, subset, weights, na.action, method = "qr", 
+  model = TRUE, x = FALSE, y = FALSE, qr = TRUE, singular.ok = TRUE, 
+  contrasts = NULL, offset, ...) 
+{ ...
+  ...
+  ...
+}
+```
+
+
+## Conditional execution
+
+- an `if` statement allows you to conditionally execute code
+
+```{r}
+#| echo: true 
+#| eval: false
+
+if (condition) {
+  # code executed when condition is TRUE
+} else {
+  # code executed when condition is FALSE
+}
+```
+
+## Multiple conditions
+
+- chain multiple `if` statements together
+
+```{r}
+#| echo: true 
+#| eval: false
+
+if (condition 1) {
+  # do this if TRUE
+} else if (condition 2) {
+  # do that if TRUE
+} else {
+  # do something else if FALSE
+}
+```
+
+## Good practices
+
+**Functions are for humans and computers** \newline
+
+- `if` and `function` should always be followed by `{}`
+  - `{`: never go on its own line
+  - `}`: always go on its own line (unless followed by `else`)
+
+::::  {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| eval: false
+#| echo: true 
+
+# Good
+if (y == 0) {
+  log(x)
+} else {
+  y ^ x
+}
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| eval: false
+#| echo: true 
+
+
+# Bad
+if (y == 0) {
+  log(x)
+} # with else in this case
+else {
+  y ^ x
+}
+```
+:::
+
+::::
+
+## Good practices
+
+**Functions are for humans and computers** \newline
+
+- function names: `verbs`
+- argument names: `nouns`
+- use inline code to explain the “why” 
+  - avoid the "what" or "how" 
+
+
+::::  {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| eval: false
+#| echo: true 
+
+
+# Good
+input_select()
+input_checkbox()
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| eval: false
+#| echo: true 
+
+# Bad
+f()
+my_awesome_function()
+```
+:::
+
+::::
+
+
+
+# Brief introduction to `purrr`
+
+## Overview 
+
+![`purrr`](~/Desktop/purrr.png){width=10%}
+
+- R as a functional programming (FP) language
+- `purrr` provides complete and consistent tools for working with **functions** and different data types (**vectors**) $\rightarrow$ enhances R's efficiency 
+  - the family of `map()` function $\rightarrow$ replace many for loops with succinct code 
+  
+:::{.callout-note appearance="simple"}
+`purrr` [**cheatsheet**](https://github.com/rstudio/cheatsheets/blob/main/purrr.pdf)
+::: 
+
+## `purrr` package: `map_df()`
+
+- transforms the input by applying a function to each variable of a `data frame` or `tibble` (**each element of a list** or **atomic vector**)
+- returns a `data frame`/`tibble`
+- arguments
+  - `.x` = a `data frame`/`tibble` (list or atomic vector)
+  - `.f` = a function
+
+
+```{r}
+#| eval: false
+#| echo: true 
+
+map_df(.x, .f)
+```
+
+## `purrr` package: `map_df()`
+
+Example 1
+
+```{r}
+#| eval: true
+#| echo: true 
+
+map_df(FLVoters, class)
+
+class(FLVoters)
+```
+
+
+## `purrr` package: `map_df()`
+
+Example 2
+```{r}
+#| eval: true
+#| echo: true 
+
+FLVoters %>% 
+  map(unique) %>% 
+  map_df(length)
+```
+
+
+
+
+## Summary
+
+**What we learnt**
+
+- how to write functions 
+  - how to communicate functions by following good practices
+- `purrr` (`map_df()`)
+
+
+## Future Game Plan
+
+- data types in R: `vector`
+- reducing duplication: **iteration**
+- new functions in **Chapter 7: Uncertainty**
+

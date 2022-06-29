@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 *.DS_Store
 *.log
+.DS_Store
+Probability/.DS_Store
+Probability/enigma/.DS_Store
