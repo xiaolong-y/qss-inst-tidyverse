@@ -281,7 +281,7 @@ na.rm = F
 ## Code style: syntax
 
 
-- Comments: Each line of a comment begins with `#` and a single space
+- comments: each line of a comment begins with `#` and a single space
 
 ```{r}
 #| eval: false

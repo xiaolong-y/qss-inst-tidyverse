@@ -1,10 +1,11 @@
 ---
-title: "Probability - Tidyverse 1"
+title: "Uncertainty - Tidyverse lecture 2"
+subtitle: For loop and functionals
 author: "Introduction to Quantitative Social Science"
 institute: 
   - "Xiaolong Yang"
   - "University of Tokyo"
-date: "June 28, 2022"
+date: "July 5, 2022"
 navigation: frame
 format: 
   beamer: 
@@ -12,6 +13,8 @@ format:
     theme: "Madrid"
     colortheme: "beaver"
     incremental: false
+    default-image-extension: tex
+    slide-level: 2
 ---
 
 ```{r include = FALSE}
@@ -21,269 +24,294 @@ data(FLVoters, package = "qss")
 
 ## Today's Game Plan
 
-  - `geom_function` 
-  - `geom_pointrange()` 371
-  - `facet_grid()` 373
-  - https://ggplot2.tidyverse.org/reference/facet_grid.html
-  - `ggplot`: `stat_function()` p338 
 
+1. reducing duplication: **iteration**
+  - writing a for loop
+  - for loop v.s. functionals
+  
 :::{.callout-note appearance="simple"}
-Today's in-class assignment: `intrade-prob`
+Today's in-class assignment: `file-drawer`
 ::: 
 
-# Column-wise operations
+# Iteration: for loop
 
-## Recap: `dplyr` as a grammar of data manipulation
+## Recap: why to avoid copy-paste?
 
--   `mutate()` adds new variables that are functions of existing variables
--   `select()` picks variables based on their names.
--   `filter()` picks cases based on their values.
--   `summarize()` reduces multiple values down to a single summary.
--   `arrange()` changes the ordering of the rows.
--   `group_by()` perform operations by group
+**Motivations?**
 
-## Column-wise operations with `dplyr`
-
-**Apply the same function to multiple variables/columns?** \newline
-
--   tedious to apply the same operation across columns
--   solution: `across() + where() + other dplyr functions`
-
-## Column-wise operations with `dplyr`
-
--   `FLVoters` data set as a heuristic
-
-```{r}
-#| echo: true 
-glimpse(FLVoters)
-```
-
-## Tedious-and-error-prone-but-works approach
-
--   calculate the mean to all the numeric variables
-
-```{r}
-#| echo: true 
-
-FLVoters %>% summarise(
-  mean_country = mean(county, na.rm = TRUE), 
-  mean_VTD = mean(VTD, na.rm = TRUE), 
-  mean_age = mean(age, na.rm = TRUE)
-  )
-```
-
-## Easier-and-works-better approach
-
--   same goal, different operation
-
-```{r}
-#| echo: true 
-
-FLVoters %>% summarise(across(county:age, mean, na.rm = TRUE))
-```
-
-## Basic usage of across() function
-
--   `.cols` selects the columns to operate on
-    -   think of `select()`
-    -   by position, name, type
--   `.fns` function(s) to apply to each column
-    -   `n_distinct()`
-    -   `min()`
-    -   `max()`
-    -   `sum()`
-    -   `sd()`
-    -   ...
 
 ```{r}
 #| eval: false
 #| echo: true 
 
-across(.cols = columns,
-       .fns = function)
+mean(FLVoters$county)
+mean(FLVoters$age)
+mean(FLVoters$VTD)
+median(FLVoters$county)
+median(FLVoters$age)
+median(FLVoters$VTD)
+sd(FLVoters$county)
+sd(FLVoters$age)
+sd(FLVoters$VTD)
 ```
 
-## A list of functions for `.fns`
+---
 
--   name a list of functions
--   supply the named list in the `fns` argument
--   example: `min()` and `max()` at once
+1. eyes on **difference** not similarity
 
-```{r}
-#| eval: false
-#| echo: true 
+---
 
-min_max <- list(
-  min = ~min(.x, na.rm = TRUE), 
-  max = ~max(.x, na.rm = TRUE)
-)
+1. eyes on **difference** not similarity
+2. easier to **respond to changes** in requirements
 
-FLVoters %>% 
-  summarise(across(county:age, min_max)) %>% 
-  glimpse()
-```
+---
 
-## A list of functions for `.fns`
+1. eyes on **difference** not similarity
+2. easier to **respond to changes** in requirements
+3. **fewer bugs**
+
+## Landscape of Duplication Reduction in R
+
+![`Duplication reduction in R`](~/Desktop/iteration.png){width=60%}
+
+## For loops: a motivating example
+
+**Compute the mean of each numeric variable in `FLVoters`**
 
 ```{r}
 #| eval: true
 #| echo: false 
 
-min_max <- list(
-  min = ~min(.x, na.rm = TRUE), 
-  max = ~max(.x, na.rm = TRUE)
-)
-
-FLVoters %>% 
-  group_by(gender, race) %>% 
-  summarise(across(county:age, min_max)) %>% 
-  glimpse()
+FLVoters <- na.omit(FLVoters)
 ```
-
-## across() with where()
-
--   `where()` as a selection helper
-    1.  takes a function
-    2.  returns all variables when `function = TRUE`
 
 ```{r}
 #| eval: true
 #| echo: true 
 
-FLVoters %>% 
-  select(where(is.numeric)) %>% 
-  head()
+mean(FLVoters$VTD)
+mean(FLVoters$age)
+mean(FLVoters$county)
 ```
 
-## across() with where()
+---
 
--   `where()` as a selection helper
-    1.  takes a function
-    2.  returns all variables when `function = TRUE`
+
+**Compute the mean of each numeric variable in `FLVoters`**
 
 ```{r}
 #| eval: true
 #| echo: true 
+FLVoters  <- FLVoters %>% 
+  select(where(is.numeric)) # keep numeric
 
-FLVoters %>% 
-  summarize(across(where(is.numeric), mean, na.rm = TRUE)) %>% 
-  glimpse()
+output <- rep(NA, length(FLVoters))          # 1. output
+for (i in seq_along(FLVoters)) {             # 2. sequence
+  output[[i]] <- mean(FLVoters[[i]])         # 3. body
+}
+output
 ```
 
-## across() in conjunction with dplyr verbs
+## 3 components for every for loop: 1
 
--   `across()` work with most other verbs (besides `summarize()`) e.g.,
-    -   `mutate()`
-    -   `group_by()`
-    -   `count()`
-    -   `distinct()`
-    - ...
+1. The **output**: create a empty vector as container beforehand 
+  - `rep(NA, length)`
+  - `vector(type, length)`
+  
+```{r}
+#| eval: false
+#| echo: true 
+
+output <- rep(NA, length(FLVoters)) # 1. output
+```
 
 ```{r}
 #| eval: false
 #| echo: true 
 
-FLVoters %>% 
-  na.omit() %>% 
-  group_by(gender) %>% 
-  summarise(
-    across(where(is.numeric), min_max),
-    across(where(is.numeric), mean),
-    across(where(is.character), tolower)) %>% 
-  glimpse()
-
+# alternatively
+output <- vector("double", length(FLVoters))
 ```
 
-## across() in conjunction with dplyr verbs
+
+## 3 components for every for loop: 2
+
+2. The **sequence**: what to loop over 
+  - each run `i` is assigned a different value from `seq_along(df)`
+  - `i` as **it**
 
 ```{r}
 #| eval: true
-#| echo: false 
-
-FLVoters %>% 
-  na.omit() %>% 
-  group_by(gender) %>% 
-  summarise(
-    across(where(is.numeric), min_max),
-    across(where(is.numeric), mean),
-    across(where(is.character), tolower)) %>% 
-  glimpse()
-
+#| echo: true 
+seq_along(FLVoters)
 ```
 
-## Short Summary: why across()?
+```{r}
+#| eval: false
+#| echo: true 
 
--   **flexible**: complex column-wise operations
-    -   works great with `summarise()` with the help of `where()`
--   **light**: reduces repetition of functions
+for (i in seq_along(FLVoters)) {}       # 2. sequence
+```
 
-# Writing Maths in Rmarkdown
+## 3 components for every for loop: 3
 
-## Mathematical modes in Rmarkdown
+3. The **body**: code that run repeatedly, each time with a different `i`
 
-1.  *Inline* by `$...$`
+```{r}
+#| eval: false
+#| echo: true 
 
--   to write maths as part of a paragraph
 
-2.  *Display* by `$$...$$`
+for (i in seq_along(FLVoters)) {        
+  output[[i]] <- mean(FLVoters[[i]])         # 3. body
+}
+```
 
--   independent expressions that are put on separate lines
-
-## $LaTeX$ for typesetting mathematics
-
--   widely adopted approach to write technical documents in political science and across scientific disciplines
--   Cheat sheet for mathematical notations: [**link**](http://tug.ctan.org/info/undergradmath/undergradmath.pdf) \newline
-
-\begin{center}
-"Focus on writing, not typesetting."
-\end{center}
-
-## Example
-
-**Inline maths** \newline
-Define `$P(M_i)$` as the probability that a randomly chosen message was assigned to machine `$i$`. Let `$U$` denote the event that some machine failed to decode a message. Then, we are interested in determining machine `$i$` for which `$P(M_i \mid U)$` is the greatest. Applying Bayes' rule, we have,
-
-**Display maths** \newline `$$P(M_i \mid U) \ = \ \frac{P(U \mid M_i) P(M_i)}{P(U)} \ = \  \frac{P(U \mid M_i) P(M_i)}{\sum_{j=1}^5 P(U \mid M_j) P(M_j)}$$`
-
-## Example
-
-**Inline maths** \newline
-Define $P(M_i)$ as the probability that a randomly chosen message was assigned to machine $i$. Let $U$ denote the event that some machine failed to decode a message. Then, we are interested in determining machine $i$ for which $P(M_i \mid U)$ is the greatest. Applying Bayes' rule, we have,
-
-**Display maths** \newline
-$$
- P(M_i \mid U) \ = \ \frac{P(U \mid M_i) P(M_i)}{P(U)} \ = \
- \frac{P(U \mid M_i) P(M_i)}{\sum_{j=1}^5 P(U \mid M_j) P(M_j)} 
-$$
-
-# Writing code in Rmarkdown
-
-## Two modes of code in `Rmarkdown`
-
-- An `Rmarkdown` document = **prose** + **code**
-- Code in an `Rmarkdown` document = **code chunks** + **inline code**
-
-**Display code** : wrap code with ````` ```{r} ````` and ````` ``` `````
-
+  - `output[[1]] <- mean(FLVoters[[1]])`
+  - `output[[2]] <- mean(FLVoters[[2]])` 
+  - ...
+  
 :::{.callout-tip appearance="simple"}
-## configuration
-Code chunk is customizable by setting the arguments in `{}`. See [**link**](https://quarto.org/docs/computations/execution-options.html) for more. 
+Subsetting R objects: `[]`, `[[]]`, `$` ([**link**](https://bookdown.org/rdpeng/rprogdatascience/subsetting-r-objects.html))
 ::: 
 
-**Inline code**: wrap code with ``` `` ``` \newline
-Please use `` `library("tidyverse")` `` to load the `` `tidyverse` `` package. $\rightarrow$ Please use `library("tidyverse")` to load the `tidyverse` package.
+---
+
+![`Monster for loop`](~/Desktop/monster_for_loop.png){width=90%}
+
+
+## For loops v.s. functionals
+
+- R as functional programming language: one can **wrap for loops in a function**, and call that function instead 
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![`For loops in R`](~/Desktop/forloops.png){width=100%}
+:::
+
+::: {.column width="50%"}
+![`Functionals in R`](~/Desktop/map_frosting.png){width=90%}
+:::
+
+::::
+
+## For loops v.s. functionals
+
+Consider a simple motivating example 
+
+  - **compute the mean of every numeric variable (every column)**
+
+```{r}
+#| eval: false
+#| echo: true 
+
+output <- rep(NA, length(FLVoters))          # 1. output
+for (i in seq_along(FLVoters)) {             # 2. sequence
+  output[[i]] <- mean(FLVoters[[i]])         # 3. body
+}
+output
+```
+
+## For loops v.s. functionals
+
+Since we do this so frequently, how about **extracting it into a function**?
+
+```{r}
+#| eval: true
+#| echo: true 
+
+col_mean <- function(df) {
+  output <- rep(NA, length(df)) 
+  for (i in seq_along(df)) {
+    output[[i]] <- mean(df[[i]])
+  }
+  output
+}
+
+col_mean(FLVoters)
+```
+
+## For loops v.s. functionals
+
+But wait, surely **median**, **standard deviation** matter too!
+
+## For loops v.s. functionals
+
+```{r}
+#| eval: true
+#| echo: true 
+
+col_median <- function(df) {
+  output <- rep(NA, length(df)) 
+  for (i in seq_along(df)) {
+    output[[i]] <- median(df[[i]])
+  }
+  output
+}
+
+```
+
+
+```{r}
+#| eval: true
+#| echo: true 
+
+col_sd <- function(df) {
+  output <- rep(NA, length(df)) 
+  for (i in seq_along(df)) {
+    output[[i]] <- sd(df[[i]])
+  }
+  output
+}
+
+```
+
+Side effects: hard to see the difference; bug $\rightarrow$ **generalize**
+
+
+## Generalizing for loops by writing functions
+
+Add an argument to supply different functions to each column
+
+  - create a `col_summary()` with `df` and `fn` arguments
+
+```{r}
+#| eval: true
+#| echo: true 
+
+col_summary <- function(df, fn) {
+  out <- rep(NA, length(df)) 
+  for (i in seq_along(df)) {
+    out[[i]] <- fn(df[[i]])
+  }
+  out
+}
+
+col_summary(FLVoters, median)
+col_summary(FLVoters, sd)
+col_summary(FLVoters, mean)
+```
+
 
 ## Summary
 
 **What we learnt**
 
-- column-wise operations with `across()` and `where()`
-- writing maths (`inline` & `display`) in `Rmarkdown`
-- writing codes  (`inline` & `display`) in `Rmarkdown`
+- iteration 
+  - for loop
+  - generalize for loop with functionals (`purrr`)
 
+![](~/Desktop/purrr_cat.png){width=20%}
 
-## Future Game Plan
+## Final Game Plan
 
--   write your functions
--   `purrr` package
+- iteration: **for loop variations**
+- tidyverse wrap-up
+- new functions in **chapter 7: Uncertainty (7.3)**
 
+## Reference
+
+- [R for Data Science](https://r4ds.hadley.nz/functions.html#functions-are-for-humans-and-computers)
+- Artwork by @[allison_horst](https://github.com/allisonhorst/stats-illustrations)

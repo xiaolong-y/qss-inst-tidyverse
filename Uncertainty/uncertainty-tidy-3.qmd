@@ -1,10 +1,11 @@
 ---
-title: "Probability - Tidyverse 1"
+title: "Uncertainty - Tidyverse 3"
+subtitle: For loop variations and wrap-up
 author: "Introduction to Quantitative Social Science"
 institute: 
   - "Xiaolong Yang"
   - "University of Tokyo"
-date: "June 28, 2022"
+date: "July 7, 2022"
 navigation: frame
 format: 
   beamer: 
@@ -12,279 +13,217 @@ format:
     theme: "Madrid"
     colortheme: "beaver"
     incremental: false
+    default-image-extension: tex
+    slide-level: 2
 ---
-
-```{r include = FALSE}
-library(tidyverse)
-data(FLVoters, package = "qss")
-```
 
 ## Today's Game Plan
 
-1. `purrr` package
-  - `map_df()`
-  - ...
-2. `stat_function()` with `ggplot()`
-3. write your functions 
-4. for loop
-
+- **For loop**: variations
+- `Tidyverse` recap
+  
 :::{.callout-note appearance="simple"}
-Today's in-class assignment: `intrade-prob`
+Today's in-class assignment: `nazis-election`
 ::: 
 
-# Column-wise operations
 
-## Recap: `dplyr` as a grammar of data manipulation
+## For loop variations
 
--   `mutate()` adds new variables that are functions of existing variables
--   `select()` picks variables based on their names.
--   `filter()` picks cases based on their values.
--   `summarize()` reduces multiple values down to a single summary.
--   `arrange()` changes the ordering of the rows.
--   `group_by()` perform operations by group
+1. Modifying an existing object, instead of creating a new object
+2. Looping over names or values, instead of indices
 
-## Column-wise operations with `dplyr`
 
-**Apply the same function to multiple variables/columns?** \newline
+## Modifying an existing object
 
--   tedious to apply the same operation across columns
--   solution: `across() + where() + other dplyr functions`
-
-## Column-wise operations with `dplyr`
-
--   `FLVoters` data set as a heuristic
+**For loop to modify an existing object**
 
 ```{r}
+#| eval: false
 #| echo: true 
-glimpse(FLVoters)
+df$a <- (df$a - min(df$a, na.rm = TRUE)) /
+(max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) /
+(max(df$b, na.rm = TRUE) - min(df$b, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) /
+(max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) /
+(max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
 ```
 
-## Tedious-and-error-prone-but-works approach
+## Modifying an existing object
 
--   calculate the mean to all the numeric variables
-
-```{r}
-#| echo: true 
-
-FLVoters %>% summarise(
-  mean_country = mean(county, na.rm = TRUE), 
-  mean_VTD = mean(VTD, na.rm = TRUE), 
-  mean_age = mean(age, na.rm = TRUE)
-  )
-```
-
-## Easier-and-works-better approach
-
--   same goal, different operation
-
-```{r}
-#| echo: true 
-
-FLVoters %>% summarise(across(county:age, mean, na.rm = TRUE))
-```
-
-## Basic usage of across() function
-
--   `.cols` selects the columns to operate on
-    -   think of `select()`
-    -   by position, name, type
--   `.fns` function(s) to apply to each column
-    -   `n_distinct()`
-    -   `min()`
-    -   `max()`
-    -   `sum()`
-    -   `sd()`
-    -   ...
+**For loop to modify an existing object**
 
 ```{r}
 #| eval: false
 #| echo: true 
 
-across(.cols = columns,
-       .fns = function)
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+df$a <- rescale01(df$a)
+df$b <- rescale01(df$b)
+df$c <- rescale01(df$c)
+df$d <- rescale01(df$d)
 ```
 
-## A list of functions for `.fns`
 
--   name a list of functions
--   supply the named list in the `fns` argument
--   example: `min()` and `max()` at once
+## Modifying an existing object
+
 
 ```{r}
 #| eval: false
 #| echo: true 
 
-min_max <- list(
-  min = ~min(.x, na.rm = TRUE), 
-  max = ~max(.x, na.rm = TRUE)
-)
-
-FLVoters %>% 
-  summarise(across(county:age, min_max)) %>% 
-  glimpse()
+for (i in seq_along(df)) {
+  df[[i]] <- rescale01(df[[i]])
+}
 ```
 
-## A list of functions for `.fns`
+1. The output: no need to create new vector - **input as output**
+2. The sequence: iterate over each column with `seq_along(df)`
+3. The body: apply `rescale01()`
 
-```{r}
-#| eval: true
-#| echo: false 
 
-min_max <- list(
-  min = ~min(.x, na.rm = TRUE), 
-  max = ~max(.x, na.rm = TRUE)
-)
 
-FLVoters %>% 
-  group_by(gender, race) %>% 
-  summarise(across(county:age, min_max)) %>% 
-  glimpse()
-```
+## Looping patterns
 
-## across() with where()
-
--   `where()` as a selection helper
-    1.  takes a function
-    2.  returns all variables when `function = TRUE`
-
-```{r}
-#| eval: true
-#| echo: true 
-
-FLVoters %>% 
-  select(where(is.numeric)) %>% 
-  head()
-```
-
-## across() with where()
-
--   `where()` as a selection helper
-    1.  takes a function
-    2.  returns all variables when `function = TRUE`
-
-```{r}
-#| eval: true
-#| echo: true 
-
-FLVoters %>% 
-  summarize(across(where(is.numeric), mean, na.rm = TRUE)) %>% 
-  glimpse()
-```
-
-## across() in conjunction with dplyr verbs
-
--   `across()` work with most other verbs (besides `summarize()`) e.g.,
-    -   `mutate()`
-    -   `group_by()`
-    -   `count()`
-    -   `distinct()`
-    - ...
-
+1. loop over the numeric indices
+  - `for (i in seq_along(vec))`
+  
 ```{r}
 #| eval: false
 #| echo: true 
-
-FLVoters %>% 
-  na.omit() %>% 
-  group_by(gender) %>% 
-  summarise(
-    across(where(is.numeric), min_max),
-    across(where(is.numeric), mean),
-    across(where(is.character), tolower)) %>% 
-  glimpse()
-
+for (i in seq_along(vec) {
+  name <- names(vec)[[i]]
+  value <- x[[i]]
+}
 ```
 
-## across() in conjunction with dplyr verbs
+## Looping patterns
 
-```{r}
-#| eval: true
-#| echo: false 
+1. loop over the numeric indices
+  - `for (i in seq_along(vec))`
 
-FLVoters %>% 
-  na.omit() %>% 
-  group_by(gender) %>% 
-  summarise(
-    across(where(is.numeric), min_max),
-    across(where(is.numeric), mean),
-    across(where(is.character), tolower)) %>% 
-  glimpse()
+2. Loop over the elements
+  - `for (x in vec)`
 
-```
+## Looping patterns
 
-## Short Summary: why across()?
+1. loop over the numeric indices
+  - `for (i in seq_along(vec))`
 
--   **flexible**: complex column-wise operations
-    -   works great with `summarise()` with the help of `where()`
--   **light**: reduces repetition of functions
+2. Loop over the elements
+  - `for (x in vec)`
+  
+3. Loop over the names
+  - `for (nm in names(vec))`
 
-# Writing Maths in Rmarkdown
+## `Tidyverse` recap
 
-## Mathematical modes in Rmarkdown
+R programming $\rightarrow$ data analysis 
 
-1.  *Inline* by `$...$`
+- `baseR` as the basic syntax
+- `tidyverse` as a dialect or specific syntax
+  - philosophy: *"facilitate a conversation between a human and a computer about data"*
 
--   to write maths as part of a paragraph
+![`Tidyverse packages`](~/Desktop/tidyverse_celestial.png){width=40%}
 
-2.  *Display* by `$$...$$`
+## Component packages of tidyverse 
 
--   independent expressions that are put on separate lines
+![`Data analysis workflow; R4DS`](~/Desktop/component.png){width=80%}
 
-## $LaTeX$ for typesetting mathematics
+## Tidy: `dplyr`
 
--   widely adopted approach to write technical documents in political science and across scientific disciplines
--   Cheat sheet for mathematical notations: [**link**](http://tug.ctan.org/info/undergradmath/undergradmath.pdf) \newline
+:::: {.columns}
 
-\begin{center}
-"Focus on writing, not typesetting."
-\end{center}
+::: {.column width="70%"}
+- Every column is variable
+- Every row is an observation
+- Every cell is a single value \newline
+:::
 
-## Example
+::: {.column width="30%"}
+![](~/Desktop/dplyr.png){width=50%}
+:::
 
-**Inline maths** \newline
-Define `$P(M_i)$` as the probability that a randomly chosen message was assigned to machine `$i$`. Let `$U$` denote the event that some machine failed to decode a message. Then, we are interested in determining machine `$i$` for which `$P(M_i \mid U)$` is the greatest. Applying Bayes' rule, we have,
+::::
 
-**Display maths** \newline `$$P(M_i \mid U) \ = \ \frac{P(U \mid M_i) P(M_i)}{P(U)} \ = \  \frac{P(U \mid M_i) P(M_i)}{\sum_{j=1}^5 P(U \mid M_j) P(M_j)}$$`
 
-## Example
 
-**Inline maths** \newline
-Define $P(M_i)$ as the probability that a randomly chosen message was assigned to machine $i$. Let $U$ denote the event that some machine failed to decode a message. Then, we are interested in determining machine $i$ for which $P(M_i \mid U)$ is the greatest. Applying Bayes' rule, we have,
 
-**Display maths** \newline
-$$
- P(M_i \mid U) \ = \ \frac{P(U \mid M_i) P(M_i)}{P(U)} \ = \
- \frac{P(U \mid M_i) P(M_i)}{\sum_{j=1}^5 P(U \mid M_j) P(M_j)} 
-$$
+## Tidy: `dplyr`: `mutate()`
 
-# Writing code in Rmarkdown
+![`mutate()`](~/Desktop/dplyr_mutate_blank.png){width=70%}
 
-## Two modes of code in `Rmarkdown`
+## Tidy: `dplyr`: `across()`
 
-- An `Rmarkdown` document = **prose** + **code**
-- Code in an `Rmarkdown` document = **code chunks** + **inline code**
+![`across()`](~/Desktop/across_blank.png){width=70%}
 
-**Display code** : wrap code with ````` ```{r} ````` and ````` ``` `````
+## Tidy: `dplyr`: `case_when()`
+  
+![`case_when()`](~/Desktop/dplyr_case_when.png){width=70%}
 
-:::{.callout-tip appearance="simple"}
-## configuration
-Code chunk is customizable by setting the arguments in `{}`. See [**link**](https://quarto.org/docs/computations/execution-options.html) for more. 
-::: 
+## Tidy: `dplyr`: `filter()`
 
-**Inline code**: wrap code with ``` `` ``` \newline
-Please use `` `library("tidyverse")` `` to load the `` `tidyverse` `` package. $\rightarrow$ Please use `library("tidyverse")` to load the `tidyverse` package.
+![`filter()`](~/Desktop/dplyr_filter.jpg){width=70%}
+
+## Tidy: `dplyr`: `group_by()`
+
+![ `group_by()`](~/Desktop/ungroup_blank.png){width=70%}
+
+
+## Transform: `dplyr` with `stringr` 
+
+![`stringr` ](~/Desktop/str_squish_blank.png){width=70%}
+
+## Transform: `dplyr` with `lubridate` 
+
+![`lubridate` ](~/Desktop/lubridate_ymd_blank.png){width=70%}
+
+## Visualize: `ggplot2`
+
+![`ggplot2`](~/Desktop/ggplot2_blank.png){width=70%}
+
+## Model: `modelr`
+
+![`modelr`](~/Desktop/modelr.png){width=30%}
+
+## Programming: `purrr` and `magrittr`
+
+![](~/Desktop/purrr.png){width=50%}
+
+![](~/Desktop/pipe.png){width=58%}
+
+## Communication: `RMarkdown`
+
+![](~/Desktop/rmarkdown_wizards.png){width=80%}
+
+
+## Other useful resource
+
+**Debugging in R** \newline
+
+- [Advanced R: Debugging](https://adv-r.hadley.nz/debugging.html)
+- [Debugging with the RStudio IDE](https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio#entering-debug-mode-stopping)
+
+**Looping patterns: advanced** \newline
+
+- [Unknown output length](https://r4ds.had.co.nz/iteration.html#unknown-output-length)
+- [Unknown sequence length](https://r4ds.had.co.nz/iteration.html#unknown-sequence-length)
 
 ## Summary
 
 **What we learnt**
 
-- column-wise operations with `across()` and `where()`
-- writing maths (`inline` & `display`) in `Rmarkdown`
-- writing codes  (`inline` & `display`) in `Rmarkdown`
+- for loop variations
+- `tidyverse` packages and major functions covered in the **QSS Tidyverse** textbook 
 
+## Reference
 
-## Future Game Plan
+- [R for Data Science](https://r4ds.hadley.nz/functions.html#functions-are-for-humans-and-computers)
+- Artwork by @[allison_horst](https://github.com/allisonhorst/stats-illustrations)
 
--   write your functions
--   `purrr` package
 
