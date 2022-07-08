@@ -36,10 +36,10 @@ ggdraw() +
 ggdraw() + 
   draw_image("figure/tidyverse_logo.png") 
 ```
->- A collection of R packages 
->- A dialect of the Base R programming language
->- Support natural workflow of data analysis
->- Data import, tidying, manipulation, visualization, programming
+- A collection of R packages 
+- A dialect of the Base R programming language
+- Support natural workflow of data analysis
+- Data import, tidying, manipulation, visualization, programming
 
 \newpage
 ## Then, what is `tidyverse`?
@@ -113,9 +113,9 @@ UNpop %>%
 - Tidyverse: **%>%** (Forward pipe operator)
 
 ### Why tidyverse?
->- Resemble human language 
->- Intuitive and logical 
->- Combination of both base R and tidyverse
+- Resemble human language 
+- Intuitive and logical 
+- Combination of both base R and tidyverse
 
 ```{r fig.show = "hold", out.width = "40%", fig.align = 'center'}
 ggdraw() + 

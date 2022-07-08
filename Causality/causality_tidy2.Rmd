@@ -21,35 +21,51 @@ library(tidyverse)
 library(qss)
 ## load data
 resume <- read_csv("data/resume.csv")
-# check data 
-resume
 ```
 
-# Aggregate data with `group_by`
+# Aggregate data with **`group_by()`**
+## What does it do?
+- Group data for downstream analysis
+- Commonly used with `summarize` and `mutate`
+
 ```{r, eval = FALSE, echo = TRUE}
-## count the observation in each subset
+## count the observation in selected variables
 race.call.summary <- resume %>%
   group_by(race, call) %>% 
-  count()
+  count() 
 
-## calculate callback rates by race
+race.call.summary
+
+## calculate callback rates 
 callback_by_race <- resume %>%
   group_by(race, sex) %>%
   summarize(callback_rate = mean(call)) 
+
+callback_by_race
 ``` 
 
-# Summarize data with `summarize`
+# Summarize data with **`summarize()`**
+## What does it do?
+- Group $\rightsquigarrow$ Summarize
+- Collapse each group into a single row summary
+
 ```{r, eval = FALSE, echo = TRUE}
+## calculate callback rate by race
+resume %>%
+group_by(race) %>%
+summarize(callback = mean(call))
+
+## calculate callback rate by race and sex
 resume %>%
 group_by(race, sex) %>%
 summarize(callback = mean(call))
-
-resume %>%
-  group_by(firstname) %>%
-  summarize(callback = mean(call))
 ```
 
-# Reshape the data with `pivot_wider`
+# Reshape the data with **`pivot_wider()`**
+## What does it do?
+- Increasing the number of columns
+- Decreasing the number of rows
+
 ```{r, eval = FALSE, echo = TRUE}
 ## tidyverse
 ## without pivoting the data
@@ -64,5 +80,9 @@ summarize(callback = mean(call)) %>%
 pivot_wider(names_from = race, values_from = callback)
 ```
 
-
+# Summary
+## Today's tidyverse functions:
+- **`group_by()`** to aggregate data
+- **`summarize()`** to summarize data
+- **`pivot_wider()`** to reshape data
 
