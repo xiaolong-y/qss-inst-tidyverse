@@ -27,7 +27,6 @@ Does racial discrimination exist in the labor market?
 ```{r warning=FALSE, message=FALSE}
 ## load packages
 library(tidyverse)
-library(qss)
 ## load data
 resume <- read_csv("data/resume.csv")
 # check data 
@@ -158,3 +157,9 @@ ggdraw() +
   draw_image("figure/dplyr.png") 
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
+
+## Reference
+
+- QSS (Textbook)
+- [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/ 
+- [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)
