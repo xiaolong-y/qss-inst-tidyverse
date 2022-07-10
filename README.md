@@ -6,13 +6,13 @@ This repository contains the original `R Markdown` (Rmd) and `Quarto` (qmd) file
 teaching the tidyverse syntax of R programming with QSS-tidyverse at the [University of Tokyo in 2022 Summer](https://kosukeimai.github.io/qss-todai/). Feel free to use them for your
 teaching. 
 
-1. [Introduction](INTRO)
-2. [Causality](CAUSALITY)
-3. [Measurement](MEASUREMENT)
-4. [Prediction](PREDICTION)
-5. [Discovery](DISCOVERY)
-6. [Probability](PROBABILITY)
-7. [Uncertainty](UNCERTAINTY)
+1. [Introduction](Introduction)
+2. [Causality](Causality)
+3. [Measurement](Measurement)
+4. [Prediction](Prediction)
+5. [Discovery](Discovery)
+6. [Probability](Probability)
+7. [Uncertainty](Uncertainty)
 
 We welcome your contributions too.  Please help us improve the existing
 teaching materials so that more instructors can use them.  To
