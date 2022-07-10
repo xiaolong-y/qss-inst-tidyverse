@@ -87,4 +87,4 @@ pivot_wider(names_from = race, values_from = callback)
 - **`pivot_wider()`** to reshape data
 
 ## Reference
-- Quantitative Social Science: An Introduction in tidyverse
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
