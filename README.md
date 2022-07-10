@@ -1,6 +1,6 @@
 # QSS-inst-tidyverse 
 
-## Instructors' public repository for [Quantitative Social Science: : An Introduction in tidyverse](https://qss.princeton.press/)
+## Instructors' public repository for [Quantitative Social Science: An Introduction in tidyverse](https://qss.princeton.press/)
 
 This repository contains the original `R Markdown` (Rmd) and `Quarto` (qmd) files, and pdf slides used for
 teaching the tidyverse syntax of R programming with QSS-tidyverse at the [University of Tokyo in 2022 Summer](https://kosukeimai.github.io/qss-todai/). Feel free to use them for your
