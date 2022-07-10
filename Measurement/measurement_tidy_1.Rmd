@@ -270,4 +270,9 @@ grid.arrange(age_hist, educ_hist, ncol = 2)
 ```
 
 
+## References
+- "Quantitative Social Science: An Introduction" - Kosuke Imai
+- "Quantitative Social Science: An Introduction in Tidyverse" - Kosuke Imai and Nora Webb Williams
+- [R for data science](https://r4ds.had.co.nz) - H.Wickham and G.Grolemund
+
 
