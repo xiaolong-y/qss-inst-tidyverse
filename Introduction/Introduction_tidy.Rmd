@@ -26,7 +26,7 @@ library(cowplot)
 A programing language!
 ```{r fig.show="hold", out.width="80%", fig.align='center'}
 ggdraw() + 
-  draw_image("figure/R_as_a_language.png") 
+  draw_image("~/Dropbox/QSS/qss-inst-tidyverse/Introduction/introduction_tidy_files/figure/R_as_a_language.png") 
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
@@ -34,7 +34,7 @@ ggdraw() +
 ## Then, what is `tidyverse`?
 ```{r fig.show = "hold", out.width = "30%", fig.align = 'center'}
 ggdraw() + 
-  draw_image("figure/tidyverse_logo.png") 
+  draw_image("~/Dropbox/QSS/qss-inst-tidyverse/Introduction/introduction_tidy_files/figure/tidyverse_logo.png") 
 ```
 - A collection of R packages 
 - A dialect of the Base R programming language
@@ -45,7 +45,7 @@ ggdraw() +
 ## Then, what is `tidyverse`?
 ```{r fig.show = "hold", out.width = "80%", fig.align = 'center'}
 ggdraw() + 
-  draw_image("figure/packages.png") 
+  draw_image("~/Dropbox/QSS/qss-inst-tidyverse/Introduction/introduction_tidy_files/figure/packages.png") 
 ```
 *Source: [Slyvia Canelon](https://github.com/spcanelon/tour-of-the-tidyverse/blob/master/images/pptx/tidyverse.png)*
 
@@ -60,7 +60,7 @@ library("tidyverse")
 
 ## Example
 ```{r echo = TRUE}
-UNpop <- read.csv("data/UNpop.csv")
+UNpop <- read.csv("~/Dropbox/QSS/qss-inst-tidyverse/Introduction/introduction_tidy_files/data/UNpop.csv")
 UNpop
 ```
 
@@ -119,7 +119,11 @@ UNpop %>%
 
 ```{r fig.show = "hold", out.width = "40%", fig.align = 'center'}
 ggdraw() + 
-  draw_image("figure/pipe.png") 
+  draw_image("~/Dropbox/QSS/qss-inst-tidyverse/Introduction/introduction_tidy_files/figure/pipe.png") 
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
+## Reference
+- Quantitative Social Science: An Introduction to tidyverse
+- [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)
+- [Slyvia Canelon](https://github.com/spcanelon/tour-of-the-tidyverse/blob/master/images/pptx/tidyverse.png)

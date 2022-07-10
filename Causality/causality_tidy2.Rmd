@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(qss)
 ## load data
-resume <- read_csv("data/resume.csv")
+resume <- read_csv("~/Dropbox/QSS/qss-inst-tidyverse/Causality/causality_tidy_files/data/resume.csv")
 ```
 
 # Aggregate data with **`group_by()`**
@@ -86,3 +86,5 @@ pivot_wider(names_from = race, values_from = callback)
 - **`summarize()`** to summarize data
 - **`pivot_wider()`** to reshape data
 
+## Reference
+- Quantitative Social Science: An Introduction in tidyverse
