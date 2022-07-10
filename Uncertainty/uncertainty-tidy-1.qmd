@@ -418,3 +418,8 @@ base +
 - reducing duplication: **iteration**
 - new functions in **chapter 7: Uncertainty (7.2, 7.3)**
 
+## Source
+
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
+- [R for Data Sciene](https://r4ds.had.co.nz/)
+- [Advanced R](https://adv-r.hadley.nz/)

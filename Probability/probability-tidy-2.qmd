@@ -13,7 +13,6 @@ format:
     theme: "Madrid"
     colortheme: "beaver"
     incremental: false
-thanks: "Sources: [R for Data Science](https://r4ds.hadley.nz/functions.html#functions-are-for-humans-and-computers); [Advanced R](https://adv-r.hadley.nz/fp.html) by Hadley Wickham"
 ---
 
 ```{r include = FALSE}
@@ -366,3 +365,8 @@ FLVoters %>%
 - reducing duplication: **iteration**
 - new functions in **Chapter 7: Uncertainty**
 
+## Source
+
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
+- [R for Data Sciene](https://r4ds.had.co.nz/)
+- [Advanced R](https://adv-r.hadley.nz/)

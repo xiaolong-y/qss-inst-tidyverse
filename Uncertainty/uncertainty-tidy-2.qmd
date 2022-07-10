@@ -313,5 +313,8 @@ col_summary(FLVoters, mean)
 
 ## Reference
 
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
 - [R for Data Science](https://r4ds.hadley.nz/functions.html#functions-are-for-humans-and-computers)
+- [Advanced R](https://adv-r.hadley.nz/)
 - Artwork by @[allison_horst](https://github.com/allisonhorst/stats-illustrations)
+
