@@ -78,3 +78,10 @@ class(subtraction)
 - `left_join (x, y, by = )`: includes all rows in x
 - `right_join (x, y, by = )`: includes all rows in y
 - `full_join (x, y, by = )`: includes all rows in x or y
+
+## References
+- "Quantitative Social Science: An Introduction" - Kosuke Imai
+- "Quantitative Social Science: An Introduction in Tidyverse" - Kosuke Imai and Nora Webb Williams
+- [R for data science](https://r4ds.had.co.nz) - H.Wickham and G.Grolemund
+- [stringr package](https://stringr.tidyverse.org)
+- [lubridate package](https://lubridate.tidyverse.org)

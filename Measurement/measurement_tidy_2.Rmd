@@ -101,3 +101,10 @@ ggplot(afghan, aes(y = educ.years, x = province)) +
 
 ### function `tidy()`: convert the output of a model into a tibble
 - takes the output of an R model (such as `kmeans()`) as an argument
+
+## References
+- "Quantitative Social Science: An Introduction" - Kosuke Imai
+- "Quantitative Social Science: An Introduction in Tidyverse" - Kosuke Imai and Nora Webb Williams
+- [R for data science](https://r4ds.had.co.nz) - H.Wickham and G.Grolemund
+- [Tidymodels package](https://www.tidymodels.org) 
+
