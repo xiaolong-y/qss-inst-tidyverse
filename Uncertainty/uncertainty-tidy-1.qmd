@@ -1,9 +1,9 @@
 ---
 title: "Uncertainty - Tidyverse 1"
 subtitle: R data types and code style
-author: "Introduction to Quantitative Social Science"
+author: "Xiaolong Yang"
 institute: 
-  - "Xiaolong Yang"
+  - "Introduction to Quantitative Social Science"
   - "University of Tokyo"
 date: "June 30, 2022"
 navigation: frame

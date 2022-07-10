@@ -17,14 +17,17 @@ knitr::opts_chunk$set(echo = TRUE)
 options(width = 100)
 library(knitr)
 library(cowplot)
+data(resume, package = "qss")
+library(tidyverse)
 ```
 
 # Data Transformation
 
 ## Let's get started with Data
 Does racial discrimination exist in the labor market?
+
 \small
-```{r warning=FALSE, message=FALSE}
+```{r warning=FALSE, message=FALSE, eval=FALSE}
 ## load packages
 library(tidyverse)
 ## load data
@@ -160,6 +163,6 @@ ggdraw() +
 
 ## Reference
 
-- QSS (Textbook)
-- [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/ 
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
+- [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)
 - [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)

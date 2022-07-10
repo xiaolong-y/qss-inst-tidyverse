@@ -1,9 +1,9 @@
 ---
 title: "Uncertainty - Tidyverse 3"
 subtitle: For loop variations and wrap-up
-author: "Introduction to Quantitative Social Science"
+author: "Xiaolong Yang"
 institute: 
-  - "Xiaolong Yang"
+  - "Introduction to Quantitative Social Science"
   - "University of Tokyo"
 date: "July 7, 2022"
 navigation: frame

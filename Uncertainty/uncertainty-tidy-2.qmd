@@ -1,9 +1,9 @@
 ---
 title: "Uncertainty - Tidyverse lecture 2"
 subtitle: For loop and functionals
-author: "Introduction to Quantitative Social Science"
+author: "Xiaolong Yang"
 institute: 
-  - "Xiaolong Yang"
+  - "Introduction to Quantitative Social Science"
   - "University of Tokyo"
 date: "July 5, 2022"
 navigation: frame
