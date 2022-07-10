@@ -285,3 +285,8 @@ Please use `` `library("tidyverse")` `` to load the `` `tidyverse` `` package. $
 -   write your functions
 -   `purrr` package
 
+## Source
+
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
+- [R for Data Sciene](https://r4ds.had.co.nz/)
+- [Advanced R](https://adv-r.hadley.nz/)
