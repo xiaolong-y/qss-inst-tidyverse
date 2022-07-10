@@ -124,6 +124,6 @@ ggdraw() +
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
 ## Reference
-- Quantitative Social Science: An Introduction to tidyverse
-- [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)
-- [Slyvia Canelon](https://github.com/spcanelon/tour-of-the-tidyverse/blob/master/images/pptx/tidyverse.png)
+- [Quantitative Social Science: An Introduction in tidyverse](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science)
+- [Tidyverse visualization manupulation basics](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)
+- [tour-of-the-tidyverse](https://github.com/spcanelon/tour-of-the-tidyverse/blob/master/images/pptx/tidyverse.png)
