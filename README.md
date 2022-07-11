@@ -13,7 +13,7 @@ teaching.
 5. [Probability](Probability)
 6. [Uncertainty](Uncertainty)
 
-## Contribution and others
+## Contribution and other resources
 We welcome your contributions too.  Please help us improve the existing
 teaching materials so that more instructors can use them.  To
 do this, create a fork, make changes, and then open a pull
