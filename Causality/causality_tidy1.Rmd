@@ -31,7 +31,7 @@ Does racial discrimination exist in the labor market?
 ## load packages
 library(tidyverse)
 ## load data
-resume <- read_csv("data/resume.csv")
+resume <- read_csv("causality_tidy_files/data/resume.csv")
 # check data 
 resume
 ```
@@ -59,16 +59,16 @@ kable(racial_gaps_by_sex)
 ## Tools
 ```{r fig.show="hold", out.width="40%", fig.align='center',echo=FALSE}
 ggdraw() + 
-  draw_image("figure/tidyr_logo.png") 
+  draw_image("causality_tidy_files/figure/tidyr_logo.png") 
 ggdraw() + 
-  draw_image("figure/dplyr_logo.png") 
+  draw_image("causality_tidy_files/figure/dplyr_logo.png") 
 ```
 
 ## `dplyr` from `Tidyverse`
 
 ```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
 ggdraw() + 
-  draw_image("figure/dplyr.png") 
+  draw_image("causality_tidy_files/figure/dplyr.png") 
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
@@ -78,25 +78,25 @@ ggdraw() +
 
 ```{r fig.show="hold", out.width="25%", fig.align='center', echo=FALSE}
 ggdraw() + 
-  draw_image("figure/pipe.png") 
+  draw_image("causality_tidy_files/figure/pipe.png") 
 ```
 
 - "a good way to pronounce %>% when reading code is “**then**”."
 
 ```{r fig.show="hold", out.width="48%", fig.align='center',echo=FALSE}
 ggdraw() + 
-  draw_image("figure/tidy_code.png") 
+  draw_image("causality_tidy_files/figure/tidy_code.png") 
 ggdraw() + 
-  draw_image("figure/baser_code.png") 
+  draw_image("causality_tidy_files/figure/baser_code.png") 
 ```
 
 \tiny
 *Source: [R for Data Science](https://r4ds.had.co.nz/explore-intro.html)*
 
-## Extract Rows (`filter`)
+\newpage
 
-- `filter`: Return rows by name/number/etc.
-
+## Extract Rows (`filter`)   
+- `filter`: Return rows by name/number/etc.  
 ```{r}
 ## subset data with black names
 resume %>% 
@@ -115,7 +115,6 @@ resume %>%
 ## Compute New Columns (`mutate`)
 
 - `mutate`
-
 \scriptsize
 ```{r}
 ## create a factor variable that takes one of the four values
@@ -157,7 +156,7 @@ We are here for you!
 ## Let's practice!
 ```{r fig.show="hold", out.width="80%", fig.align='center', echo=FALSE}
 ggdraw() + 
-  draw_image("figure/dplyr.png") 
+  draw_image("causality_tidy_files/figure/dplyr.png") 
 ```
 *Source: [RStudio](https://www.rstudio.com/resources/webinars/tidyverse-visualization-manipulation-basics/)*
 
