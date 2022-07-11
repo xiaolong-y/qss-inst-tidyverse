@@ -1,7 +1,9 @@
 ---
 title: "Probability - Tidyverse 1"
 author: "Xiaolong Yang"
-institute: "University of Tokyo"
+institute: 
+  - "Introduction to Quantitative Social Science"
+  - "University of Tokyo"
 date: "June 24, 2022"
 navigation: frame
 format: 

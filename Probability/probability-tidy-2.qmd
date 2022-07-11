@@ -1,9 +1,9 @@
 ---
 title: "Probability - Tidyverse 2"
 subtitle: Reducing duplication - writing functions and introducton to `purrr`
-author: "Introduction to Quantitative Social Science"
+author: "Xiaolong Yang"
 institute: 
-  - "Xiaolong Yang"
+  - "Introduction to Quantitative Social Science"
   - "University of Tokyo"
 date: "June 28, 2022"
 navigation: frame
