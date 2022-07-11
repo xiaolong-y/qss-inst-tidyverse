@@ -29,3 +29,5 @@ In addition, you might want to look at the following resources:
 
 - [QSS learnr-tidyverse repository](https://github.com/annayrzy/qsslearnr-tidy)
   contains interactive [learnr](https://rstudio.github.io/learnr/) exercises tutorials based on Quantitative Social Science: An Introduction in tidyverse by [Kosuke Imai](https://imai.fas.harvard.edu/) and [Nora Webb Williams](https://norawebbwilliams.github.io/) from Princeton University Press. This repository contains both baseR and tidyverse version of the exercises. 
+ - [Instructor Resources](https://press.princeton.edu/instructor-resources/quantitative-social-science-tidyverse) for Quantitative Social Science: An Introduction in tidyverse on Princeton University Press webpage.
+
