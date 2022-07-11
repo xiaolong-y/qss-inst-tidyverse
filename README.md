@@ -10,9 +10,8 @@ teaching.
 2. [Causality](Causality)
 3. [Measurement](Measurement)
 4. [Prediction](Prediction)
-5. [Discovery](Discovery)
-6. [Probability](Probability)
-7. [Uncertainty](Uncertainty)
+5. [Probability](Probability)
+6. [Uncertainty](Uncertainty)
 
 We welcome your contributions too.  Please help us improve the existing
 teaching materials so that more instructors can use them.  To
