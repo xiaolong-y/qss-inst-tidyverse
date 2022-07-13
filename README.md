@@ -7,7 +7,7 @@ teaching the tidyverse syntax of R programming with QSS-tidyverse textbook at th
 teaching. 
 
 1. [Introduction](Introduction): introduction to `tidyverse`
-2. [Causality](Causality): `dplyr` and the `magrittr` pipe operator
+2. [Causality](Causality): `dplyr`, `tidyr` and the `magrittr` pipe operator
 3. [Measurement](Measurement): `ggplot2` and `tidymodels`
 4. [Prediction](Prediction): `stringr`, `lubridate`, `tidyr`, `broom` and `modelr`
 5. [Probability](Probability): column-wise operations with `dyplr`, writing mathematics (`LaTeX`) and inline codes in `R Markdown`
