@@ -6,12 +6,12 @@ This repository contains the original `R Markdown` (Rmd) and `Quarto` (qmd) file
 teaching the tidyverse syntax of R programming with QSS-tidyverse textbook at the [University of Tokyo in 2022 Summer](https://kosukeimai.github.io/qss-todai/). Topics covered in each chapter are listed below and all materials are put together by the teaching assistants of QSS UTokyo 2022. Please feel free to use them for your
 teaching. 
 
-1. [Introduction](Introduction): introduction to tidyverse
+1. [Introduction](Introduction): introduction to `tidyverse`
 2. [Causality](Causality): `dplyr` and the `magrittr` pipe operator
 3. [Measurement](Measurement): `ggplot2` and `tidymodels`
 4. [Prediction](Prediction): `stringr`, `lubridate`, `tidyr`, `broom` and `modelr`
-5. [Probability](Probability): column-wise operations with `dyplr`, writing mathematics (`LaTeX`) and inline codes in Rmarkdown
-6. [Uncertainty](Uncertainty): `purrr`, data types in R, code style, for loops, functionals and review of tidyverse 
+5. [Probability](Probability): column-wise operations with `dyplr`, writing mathematics (`LaTeX`) and inline codes in `R Markdown`
+6. [Uncertainty](Uncertainty): `purrr`, data types in R, code style, for loops, functionals and review of `tidyverse` 
 
 ## Contribution and other resources
 We welcome your contributions too.  Please help us improve the existing
